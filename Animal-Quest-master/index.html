@@ -1,0 +1,491 @@
+<html>
+         
+           <head>
+                <style type="text/css">
+            
+                        @font-face {
+                            font-family: "Cool";
+                            src: url(CoolBoldDuranGo.TTF) format("truetype");
+                        }
+        
+    
+                </style>
+    
+  
+           </head>
+
+
+                <title>Animal Wars</title>
+                <meta charset="utf-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+                        
+              <script type="text/javascript" src="preloadjs-NEXT.min.js"></script>
+              <script type="text/javascript" src="easeljs-0.7.0.min.js"></script>
+              <script type="text/javascript" src="tweenjs-0.5.0.min.js"></script>
+              
+
+<!--
+                     EaselJS library for work with canvas
+                         
+                <script src="http://code.createjs.com/preloadjs-0.4.0.min.js"></script>
+                 EaselJS library for work with canvas
+
+                <script src="http://code.createjs.com/easeljs-0.7.0.min.js"></script>
+
+                <script src="http://cdnjs.cloudflare.com/ajax/libs/gsap/latest/TweenMax.min.js"></script>
+           -->
+            <body bgcolor="#000000">
+
+
+            </body>
+                            <style>
+
+                           
+                                    canvas {
+                                      
+
+                                           
+                                                background-color: #000000;
+                                                background-color: black;
+                                                position: absolute;
+                                                top:0;
+                                                bottom: 0;
+                                                left: 0;
+                                                right: 0;
+
+                                                margin: auto;
+                                            }
+
+
+                            </style>
+
+        <script>
+                    
+                    var stage,name,loading1;
+                    var update;
+                    var scaleFactor, W, H;
+                    var filesloaded;
+                    ////
+                    var mainMenu,playButton,playButton_O,scoreBoardButtons,scoreBoardButtons_O,howToPlayButton,howToPlayButton_O;
+                    var levelMap,board,levelSelect,dropDownContainer,dropDown,forestTxt,africaTxt,dinosaurTxt;
+                    var htp_screen,backButton,backButton_O;
+                    var forest;
+                    var gameCompletePopUp,levelCompletePopUp,nextIcon,nextIcon_O;
+                    var lock = new Array();
+                    var animal = new Array();
+                    var gamePage;
+
+                    window.addEventListener('resize',
+                        function(evt) {
+                        scaleDynamically(evt);
+                            },
+                         false);
+
+                    function scaleDynamically(e){
+                        scaleFactor= Math.min(window.innerWidth/W, window.innerHeight/H);
+                        if(scaleFactor>1.32){
+                            scaleFactor=1.32;
+                        }
+                        canvas.width = W*scaleFactor;
+                        canvas.height = H*scaleFactor;
+                        context = canvas.getContext( '2d' );
+                        stage.scaleX=stage.scaleY=scaleFactor;
+                       
+                        }
+
+                    var queue = new createjs.LoadQueue();
+
+                    queue.addEventListener("fileload", handleFileLoad);
+                    queue.addEventListener("complete", handleComplete);
+                    ///mainMenu Buttons
+                    queue.loadFile({id:"loading_screen",src:"images/loading.png"});
+                    queue.loadFile({id:"mainMenu",src:"images/mainMenu.png"});
+                    queue.loadFile({id:"play",src:"images/playButton.png"});
+                    queue.loadFile({id:"play_O",src:"images/playButton_O.png"});
+                    queue.loadFile({id:"howToPlay",src:"images/howToPlayButton.png"});
+                    queue.loadFile({id:"howToPlay_O",src:"images/howToPlayButton_O.png"});
+                    queue.loadFile({id:"scoreBoards",src:"images/sb.png"});
+                    queue.loadFile({id:"scoreBoards_O",src:"images/scoreBoardButton_O.png"});
+                    ////levelMap Buttons etc
+                    queue.loadFile({id:"levelMap",src:"images/levelMap.png"});
+                    queue.loadFile({id:"board",src:"images/board.png"});
+                    queue.loadFile({id:"levelSelect",src:"images/levelSelect.png"});
+                    queue.loadFile({id:"dropDown",src:"images/levelSelectDropDown.png"});
+                    queue.loadFile({id:"forest",src:"images/forest_level.png"});
+                    queue.loadFile({id:"lock",src:"images/lock.png"});
+                    //animals
+                    for(var i=0;i<=11;i++){
+                    queue.loadFile({id:"animal"+i,src:"images/animal/"+i+".png"});
+                    }
+                    //gamePage
+                    queue.loadFile({id:"gamePage",src:"images/gamePage.png"});
+
+
+                    ///howToPlayScreen howToPlay>>HTPscreen
+                    queue.loadFile({id:"howToPlayScreen",src:"images/howToPlay.png"});
+                    queue.loadFile({id:"backButton",src:"images/backButton.png"});
+                    queue.loadFile({id:"backButton_O",src:"images/backButton_O.png"});
+                    //queue.loadFile({id:"backButton_O",src:"images/backButton_O.png"});
+                    //scoreBoard screen
+                    queue.loadFile({id:"scoreBoardScreen",src:"images/scoreBoard.png"});
+                    //forest with pond and mud
+                    //popups
+                    queue.loadFile({id:"completePopUp",src:"images/gameOverPopup.png"});
+                    queue.loadFile({id:"nextPopUp",src:"images/popupNextLevel.png"});
+                    queue.loadFile({id:"next",src:"images/next_Icon.png"});
+                    queue.loadFile({id:"next_O",src:"images/next_Icon_O.png"});
+
+
+
+
+
+
+
+
+                    var canvas = document.createElement( navigator.isCocoonJS ? "screencanvas" : "canvas");
+                      W=638;
+                      H=550;
+                      canvas.width = W;
+                      canvas.height = H;
+                      var context = canvas.getContext("2d");
+                      document.body.appendChild(canvas);
+
+                      stage = new createjs.Stage(canvas);
+                      stage.enableMouseOver();
+                      var trigger =stage.getObjectUnderPoint(stage.mouseX, stage.mouseY); 
+
+
+                      createjs.Touch.enable(stage);
+                      
+                      createjs.Ticker.setInterval(45);
+                      createjs.Ticker.addEventListener("tick", tick);
+                      stage.autoClear = true;
+                      scaleDynamically(null);
+                       
+
+                      stage.addEventListener("click", stagePressHandler);
+                       
+
+                      
+
+                     function handleFileLoad()
+                        {
+
+                                        filesloaded++;
+                                        
+                                        if(filesloaded==1)
+                                            {
+                                                 loading1 = new createjs.Bitmap(queue.getResult("loading_screen"));
+                                                 stage.addChild(loading1);   
+                                            } 
+                        }
+
+                        function handleComplete(){
+                        stage.removeChild(loading1);
+                        ///mainMenu Bitmaps
+                        mainMenu = new createjs.Bitmap(queue.getResult("mainMenu"));
+                        playButton = new createjs.Bitmap(queue.getResult("play"));
+                        playButton_O = new createjs.Bitmap(queue.getResult("play_O"));
+                        howToPlayButton = new createjs.Bitmap(queue.getResult("howToPlay"));
+                        howToPlayButton_O = new createjs.Bitmap(queue.getResult("howToPlay_O"));
+                        scoreBoardButtons = new createjs.Bitmap(queue.getResult("scoreBoards"));
+                        scoreBoardButtons_O = new createjs.Bitmap(queue.getResult("scoreBoards_O"));
+                        backButton = new createjs.Bitmap(queue.getResult("backButton"));
+                        backButton_O = new createjs.Bitmap(queue.getResult("backButton_O"));
+                        nextIcon = new createjs.Bitmap(queue.getResult("next"));
+                        nextIcon_O = new createjs.Bitmap(queue.getResult("next_O"));
+                        //next Icon container
+                        nextIconContainer = new createjs.Container();
+                        nextIconContainer.cursor="pointer";
+                        setIconAlpha();
+                        nextIconContainer.addChild(nextIcon,nextIcon_O);
+                        ////levelMap bitmaps etc play>levelMap
+                        levelMap = new createjs.Bitmap(queue.getResult("levelMap"));
+                        board = new createjs.Bitmap(queue.getResult("board"));
+                        levelSelect = new createjs.Bitmap(queue.getResult("levelSelect"));
+                        levelSelect.cursor="pointer";
+                        //play containers
+                        dropDownContainer = new createjs.Container();
+                        playButtonContainer = new createjs.Container();
+                        playButtonContainer.cursor="pointer";
+                        setAlpha();
+                        playButtonContainer.addChild(playButton,playButton_O);
+                        /////htp container
+                        htpButtonContainer = new createjs.Container();
+                        htpButtonContainer.cursor="pointer";
+                        setHTPAlpha();
+                        htpButtonContainer.addChild(howToPlayButton,howToPlayButton_O);
+                        ///scoreboard container
+                        scoreBoardButtonContainer = new createjs.Container();
+                        scoreBoardButtonContainer.cursor="pointer";
+                        setSBAlpha();
+                        scoreBoardButtonContainer.addChild(scoreBoardButtons,scoreBoardButtons_O);
+                        ////back button container
+                        backButtonContainer = new createjs.Container();
+                        backButtonContainer.cursor="pointer";
+                        setBBAlpha();
+                        backButtonContainer.addChild(backButton,backButton_O);
+                        ////
+                        dropDown = new createjs.Bitmap(queue.getResult("dropDown"));
+                        forestTxt = new createjs.Text("FOREST","18px Cool","white");
+                        forestTxt.cursor="pointer";
+                        africaTxt = new createjs.Text("AFRICA","18px Cool","#bd9863");
+                        dinosaurTxt = new createjs.Text("DINOSAUR","18px Cool","#bd9863");
+
+                        forestTxt.textAlign = "center";
+                        
+                        dropDownContainer.addChild(dropDown,forestTxt,africaTxt,dinosaurTxt);
+
+                        ///howToPlayScreen
+                        htp_screen = new createjs.Bitmap(queue.getResult("howToPlayScreen"));
+                        //scoreBoardScreen
+                        scoreBoard = new createjs.Bitmap(queue.getResult("scoreBoardScreen"));
+                        //forest lock
+                        forest = new createjs.Bitmap(queue.getResult("forest"));
+                        for(var i=0;i<=11;i++){
+
+                                lock[i] = new createjs.Bitmap(queue.getResult("lock"));
+                                animal[i] = new createjs.Bitmap(queue.getResult("animal"+i));
+                                animal[i].cursor="pointer";
+                        }
+                        //
+                        gamePage = new createjs.Bitmap(queue.getResult("gamePage"));
+                        //popups
+                        gameCompletePopUp = new createjs.Bitmap(queue.getResult("gameOverPopup"));
+                        levelCompletePopUp = new createjs.Bitmap(queue.getResult("nextPopUp"));
+
+
+
+                        cordinates_handler();
+                        // play button listeners
+                        playButtonContainer.addEventListener("click",onPlay);
+                        playButtonContainer.addEventListener("rollover",onPlayRoll);
+                        playButtonContainer.addEventListener("rollout",onPlayRollOut);
+                        //
+                        levelSelect.addEventListener("click",onLevelSelect);
+                        forestTxt.addEventListener("click",onForest);
+                        levelMap.addEventListener("click",onLevelMap);
+                        animal[0].addEventListener("click",onAnimal0);
+                        //htp listeners
+                        htpButtonContainer.addEventListener("click",onHTP);
+                        htpButtonContainer.addEventListener("rollover",onHTPRoll);
+                        htpButtonContainer.addEventListener("rollout",onHTPRollOut);
+                        //back button listeners
+                        backButtonContainer.addEventListener("click",onBack);
+                        backButtonContainer.addEventListener("rollover",onBBRoll);
+                        backButtonContainer.addEventListener("rollout",onBBRollOut);
+                        //score board button listeners
+                        scoreBoardButtonContainer.addEventListener("click",onScore);
+                        scoreBoardButtonContainer.addEventListener("rollover",onSBRoll);
+                        scoreBoardButtonContainer.addEventListener("rollout",onSBRollOut);
+                        //next icon container listeners
+                        nextIconContainer.addEventListener("click",onNext);
+                        nextIconContainer.addEventListener("rollover",onNRoll);
+                        nextIconContainer.addEventListener("rollout",onNRollOut);
+
+
+                        viewMain();
+
+                        }
+                        function cordinates_handler(){
+                            //play.x=239;//322.5
+                            //playButton.y=225;//296.5
+                            playButtonContainer.x=239;
+                            playButtonContainer.y=225;
+                            //playButton_O.x=239;//322.5
+                            //playButton_O.y=225;//296.5
+                            levelSelect.x=491;
+                            levelSelect.y=122;
+                            forestTxt.x=67;
+                            forestTxt.y=25;
+                            africaTxt.x=36;
+                            africaTxt.y=65;
+                            dinosaurTxt.x=18;
+                            dinosaurTxt.y=105;
+                            animal[0].x=22;
+                            animal[0].y=28;
+                            lock[1].x=animal[1].x=210;
+                            lock[1].y=animal[1].y=77;
+                            lock[2].x=animal[2].x=63;
+                            lock[2].y=animal[2].y=138;
+                            lock[3].x=animal[3].x=181;
+                            lock[3].y=animal[3].y=176;
+                            lock[4].x=animal[4].x=318;
+                            lock[4].y=animal[4].y=136;
+                            lock[5].x=animal[5].x=400;
+                            lock[5].y=animal[5].y=230;
+                            lock[6].x=animal[6].x=518;
+                            lock[6].y=animal[6].y=289;
+                            lock[7].x=animal[7].x=455;
+                            lock[7].y=animal[7].y=370;
+                            lock[8].x=animal[8].x=318;
+                            lock[8].y=animal[8].y=320;
+                            lock[9].x=animal[9].x=130;
+                            lock[9].y=animal[9].y=300;
+                            lock[10].x=animal[10].x=110;
+                            lock[10].y=animal[10].y=440;
+                            lock[11].x=animal[11].x=370;
+                            lock[11].y=animal[11].y=450;
+                            //
+                            board.x=490;
+                            board.y=90;
+
+
+
+
+                            dropDownContainer.x=491.5;
+                            dropDownContainer.y=163;
+                            
+                            //howToPlayButton.x=246;
+                            //howToPlayButton.y=280;
+                            htpButtonContainer.x=246;
+                            htpButtonContainer.y=280;
+                            //scoreBoardButton.x=246;
+                            //scoreBoardButton.y=330;
+                            scoreBoardButtonContainer.x=246;
+                            scoreBoardButtonContainer.y=330;
+                            //
+                            backButtonContainer.x=30;
+                            backButtonContainer.y=478;
+                            //
+                            nextIconContainer.x=475;
+                            nextIconContainer.y=221;
+
+
+                        }
+
+
+                        function viewMain(){
+                            stage.removeAllChildren();
+                            stage.addChild(mainMenu,playButtonContainer,htpButtonContainer,scoreBoardButtonContainer);
+                            
+                        }
+                        function setAlpha(){
+
+                            playButton.alpha = 1;
+                            playButton_O.alpha = 0;
+                        }
+                        function setHTPAlpha(){
+                            howToPlayButton.alpha = 1;
+                            howToPlayButton_O.alpha = 0;
+                        }
+                        function setSBAlpha(){
+                            scoreBoardButtons.alpha = 1;
+                            scoreBoardButtons_O.alpha = 0;
+                        }
+                        function setBBAlpha(){
+                            backButton.alpha = 1;
+                            backButton_O.alpha = 0;
+
+                        }
+                        function setIconAlpha(){
+                            nextIcon.alpha = 1;
+                            nextIcon_O.alpha =0;
+                        }
+                        function onPlay(){
+                            stage.removeAllChildren();
+                            stage.addChild(levelMap,levelSelect);
+                        
+                        }
+                        function onLevelMap(){
+                            stage.removeChild(dropDownContainer);
+                        }
+                        function onPlayRoll(){
+                            playButton.alpha=0;
+                            playButton_O.alpha=1;
+                            
+                        }
+                        function onPlayRollOut(){
+                            setAlpha();
+                            //console.log("hello rolled out");
+                        }
+                        function onLevelSelect(){
+                            stage.addChild(dropDownContainer);
+                            stage.addChild();
+                        }
+                        function onForest(){
+                            stage.addChild(forest,animal[0]);
+                            for(var i=1;i<=11;i++){
+                                stage.addChild(lock[i]);
+                            }
+                        }
+                        function onAnimal0(){
+                            stage.removeAllChildren();
+                            stage.addChild(gamePage,board);
+                        }
+                        function onHTP(){
+                            stage.removeAllChildren();
+                            stage.addChild(htp_screen,backButtonContainer);
+                            
+                        }
+                        function onHTPRoll(){
+                            howToPlayButton.alpha=0;
+                            howToPlayButton_O.alpha=1;
+
+                        }
+                        function onHTPRollOut(){
+                            setHTPAlpha();
+
+                        }                
+                        function onBack(){
+                            viewMain();
+
+                        }
+                        function onBBRoll(){
+                            backButton.alpha=0;
+                            backButton_O.alpha=1;
+                        }
+                        function onBBRollOut(){
+                            setBBAlpha();
+                        }
+                        function onScore(){
+                            stage.removeAllChildren();
+                            stage.addChild(scoreBoard,backButtonContainer);
+
+                        }
+                        function onSBRoll(){
+                            scoreBoardButtons.alpha=0;
+                            scoreBoardButtons_O.alpha=1;
+
+                        }
+                        function onSBRollOut(){
+                            setSBAlpha();
+
+                        }
+                        //level complete
+                        function levelComplete(){
+                            stage.removeAllChildren();
+                            stage.addChild(levelCompletePopUp,nextIconContainer);
+                        }
+                        function onNext(){
+
+                        }
+                        function onNRoll(){
+                            nextIcon.alpha = 1;
+                            nextIcon_O.alpha = 1;
+
+                        }
+                        function onNRollOut(){
+                            setIconAlpha();
+
+                        }
+
+
+
+                        function stagePressHandler(e){
+
+
+
+                            console.log(e.stageX+" ::: "+e.stageY);
+                        }
+                        /////////////////////////ticker/////////////////////////////////////
+  
+                        function tick(){
+                            stage.update();
+                        }
+
+
+        </script>
+
+</html>
