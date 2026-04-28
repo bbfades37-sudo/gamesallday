@@ -1,0 +1,17 @@
+Thanks for purchasing the game .
+
+In order to run the file locally please install the xamp or wamp on windows or mamp on mac computer.
+Later after the installation of respective software ,place the AnimalWars10 folder to your htdocs or www folder .Later browse it 
+through your borwser by pasting or typing this in url "localhost/animalwars10".
+
+For online Installation  we recommend that you put the "animalwars10" in your subdirectory and upload it via file zilla client or 
+thought cpanel later when opening the url just give that subdirectory in the adress bar and it should work .Thanks !
+
+If you still have any issues ,change requests,additionel features request want to have this game on android ,iphone with your ads or 
+want us to reskin the graphics of this game then contact 
+
+
+Skype lazygeeker
+Ph # +923325513595
+M Yawer
+Radiance Studio 
