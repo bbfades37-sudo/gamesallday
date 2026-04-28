@@ -1,0 +1,509 @@
+<!doctype html>
+<html>
+<head>
+  <script type="text/javascript" src="ndgmr.Collision.js"></script>
+ <script src="http://cdnjs.cloudflare.com/ajax/libs/gsap/1.11.3/TweenMax.min.js"></script>
+  <script src="createjs.js"></script>
+ 	<style >
+          canvas {    
+            position: absolute;
+          background-color: #000000;
+          top:0;
+          bottom: 0;
+          left: 0;
+          right: 0;
+          margin: auto;
+          }
+ 	 </style>	
+ 	 </head>
+<body>
+</body>
+ <script type="text/javascript">   	
+		//////CreateJS prequistes(stage,update etc)and environment variables for dynamic scaling of applicaitin
+         //bitmap's
+        var collisionMethod = ndgmr.checkPixelCollision;
+          function toggleCollisionMethod() {
+             if ( collisionMethod == ndgmr.checkPixelCollision ) {
+                collisionMethod = ndgmr.checkRectCollision;
+             } else {
+                collisionMethod = ndgmr.checkPixelCollision;
+             }
+          }
+        var c;
+        var update;
+        var context;
+        var canvas;
+        var stage ;
+        var W,H;
+        var bg1;
+        var angle=0;
+        var scaleFactor=1;
+        var purpleAdded=false;
+        var init=false;
+
+        //////GameState and logic varibles//////
+        var level_score=0;
+        var blocksPopped=0;
+        var renderBlocksCalled=false;
+
+        // matrix dimensions
+      var  row_count=11;
+      var  col_count=11;
+      var  dx = [+1, 0 , -1, 0];
+      var  dy = [0 , +1, 0 , -1];
+      var  itemLabel;
+      var x = new Array(20);
+      var tweenVar=new Array(20);
+      var xprev;
+      var xprevCord=new Array(20);
+
+
+    var label= new Array(20);
+      for (var i = 0; i < 20; i++) {
+        x[i] = new Array(20);
+        tweenVar[i]=new Array(20);
+        xprevCord[i]=new Array(20);
+        label[i]=new Array(20);
+      }
+      for(var i=0;i<10;i++){
+        for(var j=0;j<10;j++){
+          x[i][j]=2+Math.floor(Math.random()*3);
+          tweenVar[i][j]=1;
+          xprevCord[i][j]=1;
+
+          label[i][j]=1;
+        }
+      } 
+         
+
+        window.addEventListener('resize',
+          function(evt) {
+            scaleDynamically(evt);
+          },
+          false);
+        
+                 function scaleDynamically(e){
+                              // calculate a scale factor to keep a correct aspect ratio.
+                                         scaleFactor= Math.min(window.innerWidth/W, window.innerHeight/H);
+                            // make the canvas conform to the new scaled size.
+                           // if(scaleFactor>0.8){
+                                //scaleFactor=0.8;
+                            //}
+                            canvas.width = W*scaleFactor;
+                            canvas.height = H*scaleFactor;
+                            // get the scaled canvas context.
+                            context = canvas.getContext( '2d' );
+                            ////console.log(scaleFactor);
+                            stage.scaleX=stage.scaleY=scaleFactor;
+
+                    }
+       
+
+        canvas = document.createElement( "canvas");
+        W=638;
+        H=550;
+
+        canvas.width  =W;
+        canvas.height  = H;
+        
+        //canvas.height = 500;
+        //createjs.Ticker.setInterval(70);
+        //createjs.Ticker.addEventListener("tick", tick);
+            
+         context = canvas.getContext("2d");
+        document.body.appendChild(canvas);  
+        var TweenIsHappening=false;          
+        var queue = new createjs.LoadQueue();
+         //  queue.installPlugin(createjs.Sound);
+           	queue.loadFile({id:"bg1", src:"yeah.jpg"});
+     	for(var i=5;i<10;i++){
+           	queue.loadFile({id:"shape"+i, src:"shape"+i+".png"});
+  		}
+           c=createjs;
+            stage = new c.Stage(canvas);
+            stage.enableMouseOver();
+            c.Touch.enable(stage);
+            c.Ticker.setInterval(40);
+
+            c.Ticker.addEventListener("tick", tick);
+          //  TweenMax.ticker.addEventListener("tick", stage.update, stage);
+            
+        //    TweenMax.ticker.addEventListener("tick", stage.update, stage);
+          //  stage.autoClear = true; 
+            scaleDynamically(null); //adjust the screen resolution accordinlgy
+            //queue.addEventListener("fileload", handleFileLoad);
+          //  queue.addEventListener("complete", handleComplete);
+        var shape=new Array(10);
+        var shapecopy=new Array(10);
+        queue.addEventListener("complete", handleComplete);
+      var x = new Array(20);
+		  for (var i = 0; i < 20; i++) {
+		    x[i] = new Array(20);
+		    shapecopy[i]=new Array(20);
+		  }
+	    for(var i=0;i<10;i++){
+	    	for(var j=0;j<10;j++){
+	    		x[i][j]=1+Math.floor(Math.random()*5);
+	    		shapecopy[i][j]=2;
+	    	}
+	    } 
+	   
+       function handleComplete(){
+        bg1= new c.Bitmap(queue.getResult("bg1"));
+        bg1.scaleX=bg1.scaleY=1;
+        for(var i=5;i<10;i++){
+        	shape[i]= new c.Bitmap(queue.getResult("shape"+i));
+			   
+           	//queue.loadFile({id:"shape"+i, src:"shape"+i+".png"});
+ 		     }
+        stage.addChild(bg1);
+        if(renderBlocksCalled==false){
+            renderBlocks(); 
+        }
+	      //will reduce from 3 3 
+        //dfs(3, 3,7,x[3][3]);
+        //will push forward.
+        //shapecopy[.addEventListener("mousedown", function(evt) { 
+         
+        // cleanArray();
+        
+      init=false; 
+       }
+       function renderBlocks(){
+          
+           for(var i=0;i<10;i++){
+          
+          for(var j=0;j<10;j++){
+            ii=9-i;
+            jj=9-j;
+            label[i][j]=1;
+            stage.removeChild(shapecopy[ii][jj]);
+            }
+          }
+
+          for(var i=0;i<10;i++){
+          ////console.log("bef"+x[i]);
+          //console.log(x[i]);
+          for(var j=0;j<10;j++){
+            
+            var ii=9-i;
+            var jj=9-j;
+            if(x[i][j]!=null ){
+           //   //console.log(x[i][j]);
+              shapecopy[ii][jj]=shape[x[i][j]+4].clone();
+              //shapecopy[i][j].onMouseOver = howtoplay_onMouseOver;
+              //shapecopy[i][j].onMouseOut = howtoplay_onMouseOut;
+              shapecopy[ii][jj].name=""+i+""+j;
+               shapecopy[ii][jj].onPress = block_onPress;
+              
+              stage.addChild(shapecopy[ii][jj]);
+              shapecopy[ii][jj].x=ii*44;
+              shapecopy[ii][jj].y=jj*44;
+            }
+        }
+        
+        }//end of for loop for j 
+       }
+       function onFinishTween(i,j){
+                 //console.log('inside on finish tween'+i+j);
+                 TweenIsHappening=false;
+                 if(renderBlocksCalled==false){
+                  renderBlocks(); 
+                  renderBlocksCalled=true;
+                  }
+
+       }
+       function block_onPress(evt){
+        //evt.target
+        //////console.log(x);
+        
+        renderBlocksCalled=false;
+        ////console.log("evt.target"+evt.target.name);
+        var iString = evt.target.name.slice(0, 1);
+        var jString = evt.target.name.slice(1, 2);
+
+        var i = parseInt(iString,10);
+        var j=parseInt(jString,10);
+        if(TweenIsHappening==false){
+          TweenIsHappening=true;
+          dfs(i, j,7,x[i][j]);
+          findScore();
+           //xprev=x;
+           cleanArray();
+        }
+         //////console.log("xprev is "+xprev+"xnew is "+x);
+         /*
+        for(var i=0;i<10;i++){
+          
+          for(var j=0;j<10;j++){
+          //shapecopy[i][j]=shape[x[i][j]+4].clone();
+        //    ////console.log(xprev+); 
+             ////console.log("i is "+i+"and j is "+j+x[i][j]);
+             stage.removeChild(shapecopy[i][j]);
+            // TweenMax.to(shapecopy[ii][jj], 3, {shapecopy[x[ii][jj].x:x[ii][jj]ii*44,shapecopy[x[ii][jj].x:jj*44});
+            
+            var ii=9-i;
+            var jj=9-j;
+            
+             //stage.addChild(shapecopy[i][x[i][j]]);
+             //shapecopy[i][j].x=i*44;
+             //shapecopy[i][j].y=j*44;
+        }
+         ////console.log("bef"+x[i]);
+
+          } 
+          */
+           
+
+       /*   
+        for(var i=0;i<10;i++){
+          
+          for(var j=0;j<10;j++){
+          //shapecopy[i][j]=shape[x[i][j]+4].clone();
+            //stage.removeChild(shapecopy[i][j]]);
+           if(x[i][j]!=null){
+           var ii=9-i;
+           var jj=9-j;
+           if(x[i][j]!=null){
+            ////console.log(x[i][j]);
+           shapecopy[ii][jj]=shape[x[i][j]+4].clone();
+           
+           // shapecopy[ii][jj]=shape[x[ii][jj]+4].clone();
+           stage.addChild(shapecopy[ii][jj]);
+           stage.addChild(shapecopy[ii][jj]);
+           //shapecopy[ii][jj].x=ii*44;
+           //shapecopy[ii][jj].y=jj*44;
+            shapecopy[ii][jj].x=ii*44;
+            shapecopy[ii][jj].y=xprevCord[ii][jj];
+            
+            //TweenMax.to(shapecopy[ii][jj], 3, {shapecopy[ii][jj].x:ii*44,shapecopy[ii][jj].y:jj*44});
+            TweenMax.to(shapecopy[ii][jj], 3+ii, { y:jj*44});    
+          }
+           }
+
+          //shapecopy[i][j].x=i*44;
+          //shapecopy[i][j].y=j*44;
+        }
+        ////console.log(x[i]);
+      } 
+      */
+          ////console.log("prev is "+xprevCord);
+      } 
+
+	    function cleanArray(){
+      for(var i=0;i<9;i++){ 
+        for(var j=0;j<9;j++){
+           xprevCord[i][j]=x[i][j];
+        }
+      }
+      var tweenCalled=false;
+      for(var i=0;i<10;i++){ 
+       var newArray = new Array();
+        var Orginal_tmp=0; 
+        for(var j=0; j<10; j++){
+          
+          if(x[i][j]==-1){
+            //no collision method 
+            Orginal_tmp++;
+             
+            
+          }else{
+            if(Orginal_tmp>0){
+                for(var tmp=j;tmp<10;tmp++){
+              if(x[i][tmp]!=-1){
+                 //if shape is not in any tween 
+                 
+                 if(true){
+                  //console.log("dest is "+shapecopy[9-i][9-tmp].y+44+"y mod 44 is "+shapecopy[9-i][9-tmp].y%44);
+                  //tweenVar[i][tmp]=TweenMax.to(shapecopy[9-i][9-tmp], 1, {y:shapecopy[9-i][9-tmp].y+44,onComplete:onFinishTween, onCompleteParams:[i, j]});
+                  //console.log("i + tmp started is"+(9-i)+":"+(9-tmp));
+                   c.Tween.removeTweens(tweenVar[i][tmp]);
+                  tweenVar[i][tmp] =new createjs.Tween( shapecopy[9-i][9-tmp]).to( { y: shapecopy[9-i][9-tmp].y+Orginal_tmp*44}, 1000 ).call(onFinishTween,[tmp,Orginal_tmp]);
+                  tweenCalled=true;
+                  shapecopy[9-i][9-tmp].y++;
+
+                  }else{
+                    //incase it's already in tween 
+                   //console.log("inside else "+shapecopy[9-i][9-tmp].y%44+"fact is"+(2 + Math.floor(shapecopy[9-i][9-tmp].y / 44)));
+                    var fact= (6 + Math.floor(shapecopy[9-i][9-tmp].y/44));
+                //tweenVar[i][tmp]=TweenMax.to(shapecopy[9-i][9-tmp], 1, {y:fact*44,onComplete:onFinishTween, onCompleteParams:[i,j]}); 
+                  c.Tween.removeTweens(tweenVar[i][tmp]);
+                  tweenVar[i][tmp] =new c.Tween( shapecopy[9-i][9-tmp]).to( { y: fact*44}, 1000 );
+                  ////console.log("tweenVar is "+fact*44);
+                } 
+              }
+            }
+                            
+            }
+            //xprevCord[9-i][9-j]=(9-(j+tmp))*44;
+            ////console.log();
+            if(9-(j-tmp)>-1){
+             //////console.log("j+tmpis");
+            // xprevCord[9-i][9-j]=shapecopy[9-i][9-(j-tmp)].y;
+            }
+            ////console.log(xprevCord[9-i][9-j]+"j+temp is"+(9-(j-tmp)));
+            newArray.push(x[i][j]);
+          }
+          ////console.log("prev is "+xprevCord[9-i][9-(j-tmp)]+" new is "+(9+j)*44);
+        }
+        ////console.log("newArray"+newArray);
+        
+       x[i]=newArray;
+       
+     }
+     //tweening just to call function onfinihs tween ,so that it don't get stuck on click of single element
+      if(!tweenCalled){
+      var DummyTween =new createjs.Tween( shapecopy[0][0]).to( {}, 0001 ).call(onFinishTween,[tmp,Orginal_tmp]);
+      
+      }
+     //pushing blocks horizontly
+     for(var i=1;i<10;i++){
+      console.log(x[i]);
+        //store null items found in array x[i][j]
+        var nullcount=0;
+        for(var j=0;j<10;j++){
+          if(x[i][j]==null){
+            nullcount++;
+          }
+        }
+        if(nullcount==10){
+          console.log("pushed horizontly"+x[i]);
+           for(var ii=i;ii>0;ii--){
+            console.log("ii:"+ii+"ii-1 is"+ii-1);
+            x[ii]=x[ii-1];
+           }
+        }
+     }
+
+      //return newArray;
+    }
+	 
+// the labels, 0 means unlabeled
+//int label[MAX][MAX];
+//find_components();
+function dfs( xx,  y, current_label,item) {
+  if (xx < 0 || xx == row_count) return; // out of bounds
+  if (y < 0 || y == col_count) return; // out of bounds
+
+  
+  //if (x[xx][y]==current_label || x[xx][y]!=2 ) return; // already labeled or not marked with 1 in m
+  if (label[xx][y]==current_label || x[xx][y]!=item ) return;
+   
+  // mark the current cell
+  
+  label[xx][y] = current_label;
+  
+  //shapecopy[xx][y].clone();
+  x[xx][y]=-1;
+  stage.removeChild(shapecopy[9-xx][9-y]);
+  blocksPopped++;
+  //stage.addChild();
+  ////console.log("herer"+xx+"y"+y);
+  // recursively mark the neighbors
+  for (var direction = 0; direction < 4; ++direction)
+    dfs(xx + dx[direction], y + dy[direction], current_label,item);
+}
+
+/*
+function find_components() {
+  var component = 0;
+  for (var i = 0; i < row_count; ++i) 
+    for (var j = 0; j < col_count; ++j) 
+      if (!label[i][j] && x[i][j]) dfs(i, j, ++component);
+}
+for(var i=0;i<10;i++){
+	    	////console.log("after"+x[i]);	
+}
+	    for(var i=0;i<10;i++){
+	    	////console.log("afterLab"+label[i]);
+	    }
+
+*/
+function findBlockLeft(){
+   var BlocksLeft=0;
+   for(var i=0;i<10;i++){
+      for(var j=0;j<10;j++){
+          if(x[i][j]!=null){
+            BlocksLeft++;
+          }
+      }
+   }
+   return BlocksLeft;
+}
+function findScore(){
+
+  var score=blocksPopped*20;
+  blocksPopped=0;
+  
+  level_score+=score;
+  console.log("score is"+level_score);
+}
+/////////////////////////ticker/////////////////////////////////////
+function tick(){
+//////////////console.log('In fucntion tick');
+ //checking collision between 
+
+  if(init){
+      for(var i=0;i<10;i++){
+       for(var j=0;j<10;j++){
+                var anyintersectionFound=false;
+                
+                // var intersection = collisionMethod(bullets[0],fallingObj[i]);
+                 for(var k=0;k<10;k++){
+                 var ii=9-i;
+                  var jj=9-j;
+                  var kk=9-k;
+                  //this if is for avoiding block to check collision wiht himself
+                      if( kk>jj ){
+                  
+                              //var intersection1 = collisionMethod(shapecopy[ii][kk],shapecopy[ii][jj]);
+                              var intersection1 = ndgmr.checkPixelCollision(shapecopy[ii][kk],shapecopy[ii][jj],1,true);  
+                              if( intersection1 ){
+                                //////console.log(intersection);
+                                tweenVar[i][j].pause();
+                                
+                                anyintersectionFound=true;
+                                //stage.update();
+                              }
+                           }  
+                  }
+                 
+                 
+                //console.log(anyintersectionFound+"kk is "+kk);
+                 if(!anyintersectionFound){
+                    ////console.log("there"+i+j);
+                    ndgmr.DEBUG_COLLISION = true;
+                    tweenVar[i][j].resume();
+                    //scaleDynamically();
+                    //stage.update();
+                  }
+                 
+                 /*
+                 if(intersection || intersection1 || intersection2 ||intersection3 ||intersection4 ||intersection5 ||intersection6 ||intersection7 ||intersection8 ||intersection9 || intersection10){
+                  score+=10;
+                  ////console.log("score is "+score);
+                  fallingObj[i].y=-200;
+                  fallingObjDesetroyed[i]=true;
+                  stage.removeChild(fallingObj[i]);
+                  ////console.log('Detected');
+
+               }
+               */
+               
+      }
+     }
+   }   
+
+ if(update){
+
+    update = false;
+//    ////////////console.log('Setting update to false');
+    stage.update(); 
+   }
+
+//  context.restore();
+stage.update();
+}	
+
+</script>
+</htmL>

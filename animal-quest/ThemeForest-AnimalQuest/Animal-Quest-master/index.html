@@ -1,0 +1,2577 @@
+<?php
+ $uname = "";
+ $readonly = "";
+ if(empty($_REQUEST['user_name'])) {
+  $uname = "";
+  $readonly = "";
+ }else{
+  $uname = $_REQUEST['user_name'];
+ // $readonly = " readonly ";
+  $readonly = " disabled ";
+ }
+?>
+<html>
+         
+           <head>
+                <style type="text/css">
+            
+                        @font-face {
+                            font-family: "Cool";
+                            src: url(CoolBoldDuranGo.TTF) format("truetype");
+                            
+                        }
+                        @font-face {
+                            
+                            font-family: "Edo";
+                            src: url(edosz.TTF) format("truetype");
+                            
+                        }
+                        
+                    input {
+
+                    }
+    
+                </style>
+    
+  
+           </head>
+
+
+                <title>Animal Wars</title>
+                <meta charset="utf-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+                         
+              <script type="text/javascript" src="preloadjs-NEXT.min.js"></script>
+              <script src="createjs.js"></script>
+              <script type="text/javascript" src="ndgmr.Collision.js"></script>
+              <script type="text/javascript" src="easeljs-0.7.0.min.js"></script>
+              <script type="text/javascript" src="tweenjs-0.5.0.min.js"></script>
+              <script type="text/javascript" src="tweenmax.js"></script>
+              <script type="text/javascript" src="database.js"></script>
+              <script type="text/javascript" src="howler.js"></script>
+              <script type="text/javascript" src="mootools-yui-compressed.js"></script>
+              <link href='css.css' rel='stylesheet' type='text/css'> 
+              
+
+<!--
+                     EaselJS library for work with canvas
+                         
+                <script src="http://code.createjs.com/preloadjs-0.4.0.min.js"></script>
+                 EaselJS library for work with canvas
+
+                <script src="http://code.createjs.com/easeljs-0.7.0.min.js"></script>
+
+                <script src="http://cdnjs.cloudflare.com/ajax/libs/gsap/latest/TweenMax.min.js"></script>
+           -->
+            <body bgcolor="#1d414c">
+
+
+            </body>
+                            <style>
+
+                           
+                                    canvas {
+                                      
+
+                                           
+                                                background-color: #4aa4c2;
+                                                
+                                                position: absolute;
+                                                
+
+                                            }
+                                            input {
+                                                font-family: "Helvetica Neue", "Cinzel", Arial, sans-serif;
+                                             border:1px solid #ccc;  
+
+                                            font-weight: bold;
+                                            text-align: center;
+                                            width: 100px;
+                                            min-height:24px;
+                                            position: absolute;
+                                            cursor:default;      
+                                               margin: 2.99401198% auto 0 auto;
+                                                
+                                              }
+
+
+                            </style>
+
+        <script>
+                    
+                    var stage,name,loading1;
+                    var update;
+                    var scaleFactor, W, H;
+                    var filesloaded;
+                    var  points_text;
+                    ////
+                             //loading bar variables start
+                                        var filesloaded = 0;
+                    var loading1;
+                    var right;
+                    var loadProgressLabel;
+                    var loadProgressLabel1;
+                    var loadingBarContainer;
+                    var loading;
+                    var loadingBar;
+                    var loading_progess;
+                    var loading_screen;
+                    var loadingBarHeight;
+                    var loadingBarWidth;
+                    var LoadingBarColor;
+                    //loading bar variables end
+                    var mainMenu,playButton,playButton_O,scoreBoardButtons,scoreBoardButtons_O,howToPlayButton,howToPlayButton_O;
+                    var levelMap,board,levelSelect,dropDownContainer,dropDown,forestTxt,africaTxt,dinosaurTxt;
+                    var htp_screen,backButton,backButton_O;
+                    var forest;
+                    var gameCompletePopUp,mainMenuButton,mainMenuButton_O,levelCompletePopUp,nextIcon,nextIcon_O;
+                    var gamePausedText,gamePuasedIcon,paused_restart,paused_resume,paused_quit,paused_resume_o,paused_quit_o,paused_restart_o,hourGlass,pause_bg;
+                    var lock = new Array();
+                    var animal = new Array();
+                    
+                    var animalFacts = new Array();
+                    var gamePage;
+                    var scoreCache=new Array();
+                    var scorePerLevel=new Array();
+                    for(var i=0;i<30;i++){
+                      if(scoreCache[i]==null){
+                        scoreCache[i]=0;
+                      }else{
+                        scoreCache[i]=JSON.decode(localStorage["number"+i]);
+                      }
+                    }
+                    var number= JSON.decode(localStorage["number"]);
+                    console.log(number+"numbrs");
+                    if(number==null){
+                      number=0;
+                    }
+                    var unlocked;
+                    var show;
+                    var africa;
+                    var dinosaur;
+                    var namee = new Array();
+                    var dataa = new Array();
+                    var submit;
+                    var submit_O;
+                    var targettt = new Array();
+                    var dropDownDown=false;
+                    targettt[13] = 7000;
+                    targettt[25] = 19000;
+                    targettt[36] = 10000;
+                    ////
+                    var sound_1 = new Howl({
+                      urls: ['gameOver.mp3', 'sound.ogg']
+                    });
+                    var sound_2=new Howl({
+                      urls:['bundleClear.mp3','']
+                    });
+                    var sound_3=new Howl({
+                    urls:['bg.mp3','']
+                      
+                    }).play();
+                    for(var i=1;i<=12;i++){
+                        targettt[i]=(i+1)*500;
+                        console.log(i+"="+targettt[i]);
+                    }
+                    for(var i=13;i<=24;i++){
+                        targettt[i+1]=targettt[i]+100;
+                        console.log(i+" ="+targettt[i]);
+                    }
+                    for(var i=25,j=2;i<=35;j++,i++){
+                        targettt[i+1]=targettt[i]+(100*j);
+                        console.log(i+" ="+targettt[i]);
+                    }
+                    
+
+                            
+                          
+
+
+                    ///yaweer's variable
+                    var collisionMethod = ndgmr.checkPixelCollision;
+                    function toggleCollisionMethod() {
+                    if ( collisionMethod == ndgmr.checkPixelCollision ) {
+                    collisionMethod = ndgmr.checkRectCollision;
+                    } else {
+                    collisionMethod = ndgmr.checkPixelCollision;
+                        }
+                    }
+                    var retryContainer;
+                    var level_score=0;
+                    var TweenIsHappening=false;
+                    var BlocksLeft;
+                    var c;
+                    var update;
+                    var context;
+                    var canvas;
+                    var stage ;
+                    var W,H;
+                    var bg1;
+                    var angle=0;
+                    var scaleFactor=1;
+                    var purpleAdded=false;
+                    var init=false;
+                    var level;
+                    var target=1500;
+                    var submitContainer;
+                    var targett;
+                    var retry;
+                    var retry_O;
+                    var enterquestionDom;
+                    var level4 = new createjs.Text("world4","18px Dosis","#bd9863");
+                        var level5 = new createjs.Text("world5","18px Dosis","#bd9863");
+                        var level6 = new createjs.Text("world6","18px Dosis","#bd9863");
+                        var level7 = new createjs.Text("world7","18px Dosis","#bd9863");
+                        var level8 = new createjs.Text("world8","18px Dosis","#bd9863");
+                        var level9 = new createjs.Text("world9","18px Dosis","#bd9863");
+                        var level10 = new createjs.Text("world10","18px Dosis","#bd9863");
+
+                        var dinosaur4;
+                        var dinosaur5;
+                        var dinosaur6;
+                        var dinosaur7;
+                        var dinosaur8;
+                        var dinosaur9;
+                        var dinosaur10;
+                        
+                         
+
+                        
+
+                    //////GameState and logic varibles//////
+                    var score=0;
+                    var blocksPopped=0;
+                    var renderBlocksCalled=false;
+                                             var resetContainer,resumeContainer,quitContainer;
+
+        var singleclicked=false;
+        var sameBlocksClicked=false;
+        var blocksPopping=0;
+        var ScoreOfBlocksToBePopped= new createjs.Text("score is ","30px Dosis","white");
+        var bonusText=new createjs.Text("score is ","30px Dosis","white");
+        var RemainingScore_Text= new createjs.Text("","30px Dosis","white");
+
+                    
+        ScoreOfBlocksToBePopped.textAlign="center";
+        var BlocksToBePopped=[]; //1 d array in which index will be stored like i,j,i,j,i,j upto so on
+        var BlocksPoppable=true;
+        var blocks2_R_Popped=false;
+        
+       
+                    // matrix dimensions
+                  var  row_count=11;
+                  var  col_count=11;
+                  var  dx = [+1, 0 , -1, 0];
+                  var  dy = [0 , +1, 0 , -1];
+                  var  itemLabel;
+                  var x = new Array(20);
+                  var tweenVar=new Array(20);
+                  var xprev;
+                  var xprevCord=new Array(20);
+                  var singleClicked=false;
+
+
+                var label= new Array(20);
+                var label= new Array(20);
+                  for (var i = 0; i < 20; i++) {
+                    x[i] = new Array(20);
+                    tweenVar[i]=new Array(20);
+                    xprevCord[i]=new Array(20);
+                    label[i]=new Array(20);
+                  }
+                  for(var i=0;i<10;i++){
+                    for(var j=0;j<10;j++){
+                      x[i][j]=2+Math.floor(Math.random()*3);
+                      tweenVar[i][j]=1;
+                      xprevCord[i][j]=1;
+
+                      label[i][j]=1;
+                    }
+                  } 
+
+                ////////yawer variable's end
+
+
+
+                    window.addEventListener('resize',
+                        function(evt) {
+                        scaleDynamically(evt);
+                            },
+                         false);
+
+                    function scaleDynamically(e){
+                        scaleFactor= Math.min(window.innerWidth/W, window.innerHeight/H);
+                        if(scaleFactor>1){
+                            scaleFactor=1;
+                        }
+                        canvas.width = W*scaleFactor;
+                        canvas.height = H*scaleFactor;
+                        context = canvas.getContext( '2d' );
+                        stage.scaleX=stage.scaleY=scaleFactor;
+                           //enterquestionDom
+                           if(enterquestionDom!=null){
+                           //enterquestionDom.scaleX=scaleFactor;
+                           //enterquestionDom.scaleY=scaleFactor;
+                          // enterquestionDom.x=scaleFactor*enterquestionDom;
+                           //enterquestionDom.y=scaleFactor*enterquestionDom;
+                           
+                           } 
+                        }
+
+                    var queue = new createjs.LoadQueue();
+
+                    queue.addEventListener("fileload", handleFileLoad);
+                    queue.addEventListener("complete", handleComplete);
+                    ///mainMenu Buttons
+                    queue.loadFile({id:"loading_screen",src:"images/loading.png"});
+                    queue.loadFile({id:"mainMenu",src:"images/mainMenu.png"});
+                    queue.loadFile({id:"play",src:"images/playButton.png"});
+                    queue.loadFile({id:"play_O",src:"images/playButton_O.png"});
+                    queue.loadFile({id:"howToPlay",src:"images/howToPlayButton.png"});
+                    queue.loadFile({id:"howToPlay_O",src:"images/howToPlayButton_O.png"});
+                    queue.loadFile({id:"scoreBoards",src:"images/sb.png"});
+                    queue.loadFile({id:"scoreBoards_O",src:"images/scoreBoardButton_O.png"});
+                    ////levelMap Buttons etc
+                    queue.loadFile({id:"africa",src:"images/africa.png"});
+                    queue.loadFile({id:"levelMap",src:"images/levelMap.png"});
+                    //queue.loadFile({id:"board",src:"images/board.png"});
+                    queue.loadFile({id:"levelSelect",src:"images/levelSelect.png"});
+                    queue.loadFile({id:"dropDown",src:"images/levelSelectDropDown.png"});
+                    queue.loadFile({id:"forest",src:"images/forest_level.png"});
+                    queue.loadFile({id:"lock",src:"images/lock.png"});
+                    queue.loadFile({id:"dinosaur",src:"images/dinosaur.png"});
+                    queue.loadFile({id:"submit",src:"images/submit.png"});
+                    queue.loadFile({id:"submit_O",src:"images/submit_O.png"});
+                    queue.loadFile({id:"retry",src:"images/retry.png"});
+                    queue.loadFile({id:"retry_O",src:"images/retry_O.png"});
+                    ///yawer loading
+
+                    //queue.loadFile({id:"bg1", src:"yeah.jpg"});
+                    for(var i=5;i<10;i++){
+                    queue.loadFile({id:"shape"+i, src:"shape"+i+".png"});
+                    }
+
+                    ////yawer loading end
+                    //animals
+                    for(var i=0;i<=130;i++){
+                    queue.loadFile({id:"animal"+i,src:"images/animal/"+i+".png"});
+                    queue.loadFile({id:"animal_facts"+i,src:"images/animal_facts/"+i+".png"})
+                    }
+                    //gamePage
+                    queue.loadFile({id:"bg1",src:"images/gamePage.png"});
+
+
+                    ///howToPlayScreen howToPlay>>HTPscreen
+                    queue.loadFile({id:"howToPlayScreen",src:"images/howToPlay.png"});
+                    queue.loadFile({id:"backButton",src:"images/backButton.png"});
+                    queue.loadFile({id:"backButton_O",src:"images/backButton_O.png"});
+                    //queue.loadFile({id:"backButton_O",src:"images/backButton_O.png"});
+                    //scoreBoard screen
+                    queue.loadFile({id:"scoreBoardScreen",src:"images/scoreBoard.png"});
+                    //forest with pond and mud
+                    //popups
+                    queue.loadFile({id:"completePopUp",src:"images/gameOverPopup.png"});
+                    queue.loadFile({id:"mainMenuButton",src:"images/mainMenuButton.png"});
+                    queue.loadFile({id:"mainMenuButton_O",src:"images/mainMenuButton_O.png"});
+
+                    queue.loadFile({id:"nextPopUp",src:"images/popupNextLevel.png"});
+                    queue.loadFile({id:"next",src:"images/next_Icon.png"});
+                    queue.loadFile({id:"next_O",src:"images/next_Icon_O.png"});
+
+                    queue.loadFile({id:"gamePausedText",src:"images/game_paused.png"});
+                    queue.loadFile({id:"gamePuasedIcon",src:"images/pausegame.png"});
+                    queue.loadFile({id:"paused_restart",src:"images/restart.png"});
+                    queue.loadFile({id:"paused_resume",src:"images/resume.png"});
+                    queue.loadFile({id:"paused_quit",src:"images/quit.png"});
+                    queue.loadFile({id:"paused_quit_o",src:"images/quit_a.png"});
+                    queue.loadFile({id:"paused_restart_o",src:"images/restart_a.png"});
+                     queue.loadFile({id:"paused_resume_o",src:"images/resume_a.png"});
+                     queue.loadFile({id:"hourGlass",src:"images/hourGlass.png"});
+                     queue.loadFile({id:"pause_bg",src:"images/pause_bg.png"});
+                    
+                     //pause_bg
+                   // var gamePausedText,gamePuasedIcon,paused_restart,paused_resume,paused_quit,paused_resume_o,paused_quit_o,paused_restart_o;
+                    var canvas = document.createElement( navigator.isCocoonJS ? "screencanvas" : "canvas");
+                      W=638;
+                      H=550;
+                      canvas.width = W;
+                      canvas.height = H;
+                      var context = canvas.getContext("2d");
+                      document.body.appendChild(canvas);
+                      //yaweer
+                      c=createjs;
+                      //yawerr
+                      stage = new createjs.Stage(canvas);
+                      stage.enableMouseOver();
+                      var trigger =stage.getObjectUnderPoint(stage.mouseX, stage.mouseY); 
+
+
+                      createjs.Touch.enable(stage);
+                      ///yawer mouse over
+
+                      stage.enableMouseOver();
+                      c.Touch.enable(stage);
+
+                      ///
+                      
+                      createjs.Ticker.setInterval(40);
+                      createjs.Ticker.addEventListener("tick", tick);
+                      //stage.autoClear = true;
+                      scaleDynamically(null);
+                       
+
+                      stage.addEventListener("click", stagePressHandler);
+                      //yawers code
+                        var shape=new Array(10);
+                        var shapecopy=new Array(10);
+                        //queue.addEventListener("complete", handleComplete);
+                        var x = new Array(20);
+                        for (var i = 0; i < 20; i++) {
+                        x[i] = new Array(20);
+                        shapecopy[i]=new Array(20);
+                            }
+                        for(var i=0;i<10;i++){
+                        for(var j=0;j<10;j++){
+                            x[i][j]=1+Math.floor(Math.random()*5);
+                            shapecopy[i][j]=2;
+                            }
+                        } 
+                        ///yawer end
+                        
+                          loadProgressLabel= new createjs.Text("","50px Verdana bold","white");
+                
+                  loadProgressLabel.x = 250
+                  loadProgressLabel.y = 210;
+                  loadProgressLabel1=new createjs.Text("","20px Verdana bold","white");
+
+            //////////
+           loadingBarContainer = new createjs.Container();
+
+  //the height width and color of the loading bar
+  loadingBarHeight=80;
+  loadingBarWidth=500;
+   var frameColor = createjs.Graphics.getRGB(0,128,255);
+   var LoadingBarColor = createjs.Graphics.getRGB(255,255,255);
+
+  //creating the loading bar   
+   loadingBar = new createjs.Shape();
+    loadingBar.graphics.beginFill(LoadingBarColor).drawRect(0, 0, 1, loadingBarHeight).endFill();
+
+    //creating the frame around the loading bar
+  frame = new createjs.Shape();
+    padding=3;
+    frame.graphics.beginFill(frameColor).drawRect(-padding/2, -padding/2, loadingBarWidth+padding, loadingBarHeight+padding).endFill();
+
+    //adding the loading bar and the frame to our container and placing it on the desired position on the canvas
+    loadingBarContainer.addChild(frame,loadingBar);
+    loadingBarContainer.align = "center";
+    loadingBarContainer.x = 80;
+    loadingBarContainer.y = 300;
+    
+
+
+  //adding the container with the elements to our stage
+    
+            /////////
+               
+
+
+            //-----------
+
+                   function handleFileLoad(){
+                    loadingBar.scaleX = queue.progress * loadingBarWidth;
+
+    
+                    
+
+                  loading_progess = Math.round(queue.progress*1000)/10;
+                    console.log(loading_progess);
+                    loadProgressLabel.text=loading_progess + "%";
+
+                 // stage.addChild(loadProgressLabel);
+               
+              
+                    
+                   // filesloaded++;
+                 
+
+                loading1 = new createjs.Bitmap(queue.getResult("loading1"));
+                 
+                stage.addChild(loading1);
+                stage.addChild(loadingBarContainer);
+                  stage.addChild(loadProgressLabel);
+                  loadProgressLabel1.text = "Click to start ... !";
+                  loadProgressLabel1.x=250;
+                  loadProgressLabel1.y=300;
+                  loadProgressLabel1.alpha=0;
+                  stage.addChild(loadProgressLabel1);
+
+                    
+                    if(loading_progess==100){
+
+                //stage.removeAllChildren();
+                 
+                    //stage.removeChild(loadProgressLabel);
+
+                  
+                    
+                    
+                    TweenMax.to(loadingBarContainer,2,{y:200,opacity:0,delay:1,zIndex:100});
+                    loadProgressLabel1.alpha=1;
+                    
+               
+                     stage.addEventListener("click",handleComplete());
+                    console.log("helllo");
+                    stage.update();
+                  
+                  }  
+                stage.update();
+
+                     
+                  //  } 
+                  }
+                      
+
+                    
+                        function handleComplete(){
+                        canvas.addEventListener("click", handleClick);
+                            ///mainMenu Bitmaps
+                        //yawer start
+                        bg1= new c.Bitmap(queue.getResult("bg1"));
+                        //bg1.scaleX=bg1.scaleY=1;
+                        for(var i=5;i<10;i++){
+                        shape[i]= new c.Bitmap(queue.getResult("shape"+i));
+                        //queue.loadFile({id:"shape"+i, src:"shape"+i+".png"});
+                        }
+                        //stage.addChild(bg1);
+                        //renderBlocks();
+                        //will reduce from 3 3 
+                        //dfs(3, 3,7,x[3][3]);
+                        //will push forward.
+                        //shapecopy[.addEventListener("mousedown", function(evt) { 
+         
+                        // cleanArray();
+        
+                        init=false; 
+               
+                        //yawer end
+                        mainMenu = new createjs.Bitmap(queue.getResult("mainMenu"));
+                        playButton = new createjs.Bitmap(queue.getResult("play"));
+                        playButton_O = new createjs.Bitmap(queue.getResult("play_O"));
+                        howToPlayButton = new createjs.Bitmap(queue.getResult("howToPlay"));
+                        howToPlayButton_O = new createjs.Bitmap(queue.getResult("howToPlay_O"));
+                        scoreBoardButtons = new createjs.Bitmap(queue.getResult("scoreBoards"));
+                        scoreBoardButtons_O = new createjs.Bitmap(queue.getResult("scoreBoards_O"));
+                        backButton = new createjs.Bitmap(queue.getResult("backButton"));
+                        backButton_O = new createjs.Bitmap(queue.getResult("backButton_O"));
+                        nextIcon = new createjs.Bitmap(queue.getResult("next"));
+                        nextIcon_O = new createjs.Bitmap(queue.getResult("next_O"));
+                        //next Icon container
+                        nextIconContainer = new createjs.Container();
+                        nextIconContainer.cursor="pointer";
+                        setIconAlpha();
+                        nextIconContainer.addChild(nextIcon,nextIcon_O);
+                        ////levelMap bitmaps etc play>levelMap
+                        levelMap = new createjs.Bitmap(queue.getResult("levelMap"));
+                        //board = new createjs.Bitmap(queue.getResult("board"));
+                        levelSelect = new createjs.Bitmap(queue.getResult("levelSelect"));
+                        levelSelect.cursor="pointer";
+                        //play containers
+                        dropDownContainer = new createjs.Container();
+                        playButtonContainer = new createjs.Container();
+                        playButtonContainer.cursor="pointer";
+                        setAlpha();
+                        playButtonContainer.addChild(playButton,playButton_O);
+                        /////htp container
+                        htpButtonContainer = new createjs.Container();
+                        htpButtonContainer.cursor="pointer";
+                        setHTPAlpha();
+                        htpButtonContainer.addChild(howToPlayButton,howToPlayButton_O);
+                        ///scoreboard container
+                        scoreBoardButtonContainer = new createjs.Container();
+                        scoreBoardButtonContainer.cursor="pointer";
+                        setSBAlpha();
+                        scoreBoardButtonContainer.addChild(scoreBoardButtons,scoreBoardButtons_O);
+                        ////back button container
+                        backButtonContainer = new createjs.Container();
+                        backButtonContainer.cursor="pointer";
+                        setBBAlpha();
+                        backButtonContainer.addChild(backButton,backButton_O);
+
+                       ////
+                        dropDown = new createjs.Bitmap(queue.getResult("dropDown"));
+                        forestTxt = new createjs.Text("FOREST","18px Dosis","white");
+                        forestTxt.cursor="pointer";
+
+                        africaTxt = new createjs.Text("AFRICA","18px Dosis","#bd9863");
+                        dinosaurTxt = new createjs.Text("DINOSAUR","18px Dosis","#bd9863");
+                        
+                        
+                        forestTxt.textAlign = "center";
+                        
+                        dropDownContainer.addChild(dropDown,forestTxt,africaTxt,dinosaurTxt,level4,level5,level6,level7,level8,level9,level10);
+                        //dropDown.addChild();
+                        ///howToPlayScreen
+                        htp_screen = new createjs.Bitmap(queue.getResult("howToPlayScreen"));
+                        //scoreBoardScreen
+                        scoreBoard = new createjs.Bitmap(queue.getResult("scoreBoardScreen"));
+                        //forest lock
+                        dinosaur = new createjs.Bitmap(queue.getResult("dinosaur"));
+                        dinosaur4 = new createjs.Bitmap(queue.getResult("dinosaur"));
+                        dinosaur5 = new createjs.Bitmap(queue.getResult("dinosaur"));
+                        dinosaur6 = new createjs.Bitmap(queue.getResult("dinosaur"));
+                        dinosaur7 = new createjs.Bitmap(queue.getResult("dinosaur"));
+                        dinosaur8 = new createjs.Bitmap(queue.getResult("dinosaur"));
+                        dinosaur9 = new createjs.Bitmap(queue.getResult("dinosaur"));
+                        dinosaur10 = new createjs.Bitmap(queue.getResult("dinosaur"));
+                        
+                        
+                        forest = new createjs.Bitmap(queue.getResult("forest"));
+                        for(var i=0;i<=130;i++){
+                                
+                                lock[i] = new createjs.Bitmap(queue.getResult("lock"));
+                                lock[i].unlocked = false;
+                                animal[i] = new createjs.Bitmap(queue.getResult("animal"+i));
+                                animalFacts[i] = new createjs.Bitmap(queue.getResult("animal_facts"+i))
+                                animal[i].show = false;
+                                animal[i].name=i;
+                                animal[i].cursor="pointer";
+                                
+                        }
+                        animal[13].scaleX=0.6;
+                        animal[13].scaleY=0.4;
+                        //
+                        //gamePage = new createjs.Bitmap(queue.getResult("gamePage"));
+                        //popups
+                        gameCompletePopUp = new createjs.Bitmap(queue.getResult("completePopUp"));
+                        mainMenuButton = new createjs.Bitmap(queue.getResult("mainMenuButton"));
+                        mainMenuButton_O = new createjs.Bitmap(queue.getResult("mainMenuButton_O"));
+                        //
+                        retry = new createjs.Bitmap(queue.getResult("retry"));
+                        retry_O = new createjs.Bitmap(queue.getResult("retry_O"));
+                        retryContainer = new createjs.Container();
+                        retryContainer.cursor="pointer";
+                        setRetryAlpha();
+                        retryContainer.addChild(retry,retry_O);
+
+
+                        submit = new createjs.Bitmap(queue.getResult("submit"));
+                        submit_O = new createjs.Bitmap(queue.getResult("submit_O"));
+                        submitContainer = new createjs.Container();
+                        submitContainer.cursor="pointer";
+                        setSubmitAlpha();
+                        submitContainer.addChild(submit,submit_O);
+                        ////main menu button
+                        mainMenu_container = new createjs.Container();
+                        mainMenu_container.cursor="pointer";
+                        setMMAlpha();
+                        mainMenu_container.addChild(mainMenuButton,mainMenuButton_O);
+
+                        levelCompletePopUp = new createjs.Bitmap(queue.getResult("nextPopUp"));
+
+                        //var gamePausedText,gamePuasedIcon,paused_restart,paused_resume,paused_quit,paused_resume_o,paused_quit_o,paused_restart_o;
+                        gamePausedText = new createjs.Bitmap(queue.getResult("gamePausedText"));
+                        gamePuasedIcon = new createjs.Bitmap(queue.getResult("gamePuasedIcon"));
+                        paused_resume = new createjs.Bitmap(queue.getResult("paused_resume"));
+                        paused_restart = new createjs.Bitmap(queue.getResult("paused_restart"));
+                        paused_quit = new createjs.Bitmap(queue.getResult("paused_quit"));
+                        paused_resume_o = new createjs.Bitmap(queue.getResult("paused_resume_o"));
+                        paused_quit_o = new createjs.Bitmap(queue.getResult("paused_quit_o"));
+                        paused_restart_o = new createjs.Bitmap(queue.getResult("paused_restart_o"));
+                        hourGlass = new createjs.Bitmap(queue.getResult("hourGlass"));
+                        pause_bg = new createjs.Bitmap(queue.getResult("pause_bg"));
+                        
+                        
+                        resetContainer= new createjs.Container();
+                        resumeContainer=new createjs.Container();
+                        quitContainer=new createjs.Container();
+                        resetContainer.cursor=resumeContainer.cursor=quitContainer.cursor="pointer";
+                        resetContainer.addChild(paused_restart,paused_restart_o);
+                        resumeContainer.addChild(paused_resume,paused_resume_o);
+                        quitContainer.addChild(paused_quit,paused_quit_o);
+                        setPaused_quit_a();setPaused_resume_a();setPaused_reset_a();
+
+
+                        gamePuasedIcon.addEventListener("click",onGamePuasedIconClicked);
+                        quitContainer.addEventListener("click",onQuitContainerClicked);
+                        quitContainer.addEventListener("rollover",onQuitContainerRollover);
+                        quitContainer.addEventListener("rollout",onQuitContainerRollOut);
+                        
+                        resumeContainer.addEventListener("click",onResumeContainerClicked);
+                        resumeContainer.addEventListener("rollover",onResumeContainerRollover);
+                        resumeContainer.addEventListener("rollout",onResumeContainerRollOut);
+
+                        resetContainer.addEventListener("click",onResetContainerClicked);
+                        resetContainer.addEventListener("rollover",onResetContainerRollover);
+                        resetContainer.addEventListener("rollout",onResetContainerRollOut);
+                        cordinates_handler();
+                        
+                        // play button listeners
+                        playButtonContainer.addEventListener("click",onPlay);
+                        
+                        playButtonContainer.addEventListener("rollover",onPlayRoll);
+                        playButtonContainer.addEventListener("rollout",onPlayRollOut);
+                        //
+                        levelSelect.addEventListener("click",onLevelSelect);
+                        forestTxt.addEventListener("click",onForest);
+                        
+                        //dinosaurTxt.addEventListener("click",onAfrica);
+                        forest.addEventListener("click",onLevelMap);
+                        
+                        for(var i=0,j=0;i<=130;j++,i++){
+                        animal[i].addEventListener("click",function(evt){
+                          /*  animal[0].number=100;
+                    animal[12].number=7000;
+                    animal[24].number=19000;
+                    */
+                            //BlocksLeft=0;
+
+                            console.log("i="+number);
+                            score=0;
+
+                            
+                            stage.removeAllChildren();
+                            //stage.removeChild(gameCompletePopUp);
+                            number=evt.currentTarget.name;
+                            //target = targettt[number+1];
+                           /* if(number<12)
+                            target=(number+2)*500;
+                            else if(number>13&&number<24)
+                            target=((number+2)*100)-animal[12].number;
+                            else if(number>25&&number<36)
+                            target=((number+2)*2000)-animal[24].number;
+                            else if(number==12)
+                            target=animal[12].number;
+                            else if(number==24)
+                            target=animal[24].number;
+                        */
+                           ////alert("number is "+number);
+                            score= JSON.decode(localStorage["number"+number]);
+                            if(number<12){
+                            target=(number+1)*1500;
+                            }else if(number<24){
+                              //alert("target"+target);
+                              target=(12)*1500+(number-11)*1600;
+                            }else if(number<36){
+                              target=(12)*1500+(12)*1600+(number-23)*1700;
+                              
+                            }else if(number<48){
+                              target=(12)*1500+(12)*1600+(12)*1700+(number-35)*1800;
+                              
+                            }else if(number<60){
+                              target=(12)*1500+(12)*1600+(12)*1700+(12)*1800+(number-47)*1900;
+                              
+                            }else if(number<72){
+                              target=(12)*1500+(12)*1600+(12)*1700+(12)*1800+(12)*1900+(number-59)*2000;
+                              
+                            }else if(number<84){
+                              target=(12)*1500+(12)*1600+(12)*1700+(12)*1800+(12)*1900+(12)*2000+(number-71)*2100;
+                              
+                            }else if(number<96){
+                              target=(12)*1500+(12)*1600+(12)*1700+(12)*1800+(12)*1900+(12)*2000+(12)*2100+(number-83)*2200;
+                              
+                            }else if(number<108){
+                              target=(12)*1500+(12)*1600+(12)*1700+(12)*1800+(12)*1900+(12)*2000+(12)*2100+(12)*2200+(number-95)*2300;
+                              
+                            }else if(number<120){
+                              target=(12)*1500+(12)*1600+(12)*1700+(12)*1800+(12)*1900+(12)*2000+(12)*2100+(12)*2200+(12)*2300+(number-107)*2400;
+                              
+                            }
+                            level = new createjs.Text(number+1 , "30px Dosis","yellow");
+                            level.x=550;
+                            level.y=311;//y=216 exact for score
+                            ////alert("yeah");
+                            scoree = new createjs.Text(score , "30px Dosis","yellow" );
+                            scoree.x=530;
+                            scoree.y=216;
+
+                            targett = new createjs.Text(""+target , "30px Dosis","yellow" );
+                            targett.x=530;
+                            targett.y=133;
+
+                            points_text = new createjs.Text("","30px Dosis","white");
+                            
+                            
+                            stage.addChild(bg1,level,scoree,targett,gamePuasedIcon);
+                            scoree.textAlign="center";
+                            resetVar();
+                            renderBlocks();
+                            });
+                        }
+                        africa = new createjs.Bitmap(queue.getResult("africa"));
+                        
+                        africa.addEventListener("click",onLevelMap);
+                        dinosaur.addEventListener("click",onLevelMap);
+                        dinosaur4.addEventListener("click",onLevelMap);
+                        dinosaur5.addEventListener("click",onLevelMap);
+                        dinosaur6.addEventListener("click",onLevelMap);
+                        dinosaur7.addEventListener("click",onLevelMap);
+                        dinosaur8.addEventListener("click",onLevelMap);
+
+
+                        
+                        //htp listeners
+                        htpButtonContainer.addEventListener("click",onHTP);
+                        htpButtonContainer.addEventListener("rollover",onHTPRoll);
+                        htpButtonContainer.addEventListener("rollout",onHTPRollOut);
+                        //back button listeners
+                        backButtonContainer.addEventListener("click",onBack);
+                        backButtonContainer.addEventListener("rollover",onBBRoll);
+                        backButtonContainer.addEventListener("rollout",onBBRollOut);
+                        //score board button listeners
+                        scoreBoardButtonContainer.addEventListener("click",onScore);
+                        scoreBoardButtonContainer.addEventListener("rollover",onSBRoll);
+                        scoreBoardButtonContainer.addEventListener("rollout",onSBRollOut);
+                        //next icon container listeners
+                        nextIconContainer.addEventListener("click",onNext);
+                        nextIconContainer.addEventListener("rollover",onNRoll);
+                        nextIconContainer.addEventListener("rollout",onNRollOut);
+                        //shapecopy[ii][jj].addEventListener("click",block_onPress);
+                        //main menu container listener
+                        mainMenu_container.addEventListener("click",viewMain);
+                        mainMenu_container.addEventListener("rollover",onMRoll);
+                        mainMenu_container.addEventListener("rollout",onMRollOut);
+                        //submitContainer
+
+                        submitContainer.addEventListener("click",onSubmitt);
+                        submitContainer.addEventListener("rollover",onSubmittRoll);
+                        submitContainer.addEventListener("rollout",onSubmittRollOut);
+                        // retry container
+
+                        retryContainer.addEventListener("click",onRetry);
+                        retryContainer.addEventListener("rollover",onRetryRoll);
+                        retryContainer.addEventListener("rollout",onRetryRollOut);
+
+                          //
+
+                        //options container
+
+                        
+
+//gameOver();
+                        
+                        }
+                          function handleClick() {
+                      
+ stage.removeChild(loading1);
+ canvas.removeEventListener("click", handleClick);
+  viewMain();
+
+}
+                        function dropdown(){
+
+                        }
+                        function cordinates_handler(){
+                            //play.x=239;//322.5
+                            //playButton.y=225;//296.5
+                            playButtonContainer.x=239;
+                            playButtonContainer.y=225;
+                            //playButton_O.x=239;//322.5
+                            //playButton_O.y=225;//296.5
+                            levelSelect.x=491;
+                            levelSelect.y=122;
+                            forestTxt.x=67;
+                            forestTxt.y=25;
+                            africaTxt.x=36;
+                            africaTxt.y=55;
+                            dinosaurTxt.x=18;
+                            dinosaurTxt.y=85;
+                            level4.x=33;
+                            level4.y=115;
+                            level5.x=33;
+                            level5.y=145;
+                            level6.x=33;
+                            level6.y=175;
+                            level7.x=33;
+                            level7.y=205;
+                            level8.x=33;
+                            level8.y=235;
+                            level9.x=33;
+                            level9.y=265;
+                            level10.x=33;
+                            level10.y=295;
+                            animal[0].x=22;
+                            animal[0].y=28;
+                            lock[1].x=animal[1].x=210;
+                            lock[1].y=animal[1].y=77;
+                            lock[2].x=animal[2].x=63;
+                            lock[2].y=animal[2].y=138;
+                            lock[3].x=animal[3].x=181;
+                            lock[3].y=animal[3].y=176;
+                            lock[4].x=animal[4].x=318;
+                            lock[4].y=animal[4].y=136;
+                            lock[5].x=animal[5].x=400;
+                            lock[5].y=animal[5].y=230;
+                            lock[6].x=animal[6].x=518;
+                            lock[6].y=animal[6].y=289;
+                            lock[7].x=animal[7].x=455;
+                            lock[7].y=animal[7].y=370;
+                            lock[8].x=animal[8].x=318;
+                            lock[8].y=animal[8].y=320;
+                            lock[9].x=animal[9].x=130;
+                            lock[9].y=animal[9].y=300;
+                            lock[10].x=animal[10].x=110;
+                            lock[10].y=animal[10].y=440;
+                            lock[11].x=animal[11].x=370;
+                            lock[11].y=animal[11].y=450;
+                            /////africa
+                            animal[12].x=30;
+                            animal[12].y=385;
+                            lock[13].x=animal[13].x=200;
+                            lock[13].y=animal[13].y=460;
+                            lock[14].x=animal[14].x=380;
+                            lock[14].y=animal[14].y=440;
+                            lock[15].x=animal[15].x=510;
+                            lock[15].y=animal[15].y=390;
+                            lock[16].x=animal[16].x=360;
+                            lock[16].y=animal[16].y=320;
+                            lock[17].x=animal[17].x=250;
+                            lock[17].y=animal[17].y=270;
+                            lock[18].x=animal[18].x=90;
+                            lock[18].y=animal[18].y=280;
+                            lock[19].x=animal[19].x=30;
+                            lock[19].y=animal[19].y=200;
+                            lock[20].x=animal[20].x=130;
+                            lock[20].y=animal[20].y=90;
+                            lock[21].x=animal[21].x=250;
+                            lock[21].y=animal[21].y=60;
+                            lock[22].x=animal[22].x=370;
+                            lock[22].y=animal[22].y=170;
+                            lock[23].x=animal[23].x=500;
+                            lock[23].y=animal[23].y=260;
+                            //
+                            animal[24].x=460;
+                            animal[24].y=440;
+                            lock[25].x=animal[25].x=340;
+                            lock[25].y=animal[25].y=465;
+                            lock[26].x=animal[26].x=180;
+                            lock[26].y=animal[26].y=460;
+                            lock[27].x=animal[27].x=110;
+                            lock[27].y=animal[27].y=340;
+                            lock[28].x=animal[28].x=40;
+                            lock[28].y=animal[28].y=240;
+                            lock[29].x=animal[29].x=80;
+                            lock[29].y=animal[29].y=120;
+                            lock[30].x=animal[30].x=200;
+                            lock[30].y=animal[30].y=70;
+                            lock[31].x=animal[31].x=340;
+                            lock[31].y=animal[31].y=120;
+                            lock[32].x=animal[32].x=270;
+                            lock[32].y=animal[32].y=220;
+                            lock[33].x=animal[33].x=460;
+                            lock[33].y=animal[33].y=250;
+                            lock[34].x=animal[34].x=460;
+                            lock[34].y=animal[34].y=330;
+                            lock[35].x=animal[35].x=270;
+                            lock[35].y=animal[35].y=300;
+
+                            //
+                            animal[36].x=460;
+                            animal[36].y=440;
+                            lock[37].x=animal[37].x=340;
+                            lock[37].y=animal[37].y=465;
+                            lock[38].x=animal[38].x=180;
+                            lock[38].y=animal[38].y=460;
+                            lock[39].x=animal[39].x=110;
+                            lock[39].y=animal[39].y=340;
+                            lock[40].x=animal[40].x=40;
+                            lock[40].y=animal[40].y=240;
+                            lock[41].x=animal[41].x=80;
+                            lock[41].y=animal[41].y=120;
+                            lock[42].x=animal[42].x=200;
+                            lock[42].y=animal[42].y=70;
+                            lock[43].x=animal[43].x=340;
+                            lock[43].y=animal[43].y=120;
+                            lock[44].x=animal[44].x=270;
+                            lock[44].y=animal[44].y=220;
+                            lock[45].x=animal[45].x=460;
+                            lock[45].y=animal[45].y=250;
+                            lock[46].x=animal[46].x=460;
+                            lock[46].y=animal[46].y=330;
+                            lock[47].x=animal[47].x=270;
+                            lock[47].y=animal[47].y=300;
+
+                            
+                            
+                            
+                            //
+                            animal[48].x=460;
+                            animal[48].y=440;
+                            lock[49].x=animal[49].x=340;
+                            lock[49].y=animal[49].y=465;
+                            lock[50].x=animal[50].x=180;
+                            lock[50].y=animal[50].y=460;
+                            lock[51].x=animal[51].x=110;
+                            lock[51].y=animal[51].y=340;
+                            lock[52].x=animal[52].x=40;
+                            lock[52].y=animal[52].y=240;
+                            lock[53].x=animal[53].x=80;
+                            lock[53].y=animal[53].y=120;
+                            lock[54].x=animal[54].x=200;
+                            lock[54].y=animal[54].y=70;
+                            lock[55].x=animal[55].x=340;
+                            lock[55].y=animal[55].y=120;
+                            lock[56].x=animal[56].x=270;
+                            lock[56].y=animal[56].y=220;
+                            lock[57].x=animal[57].x=460;
+                            lock[57].y=animal[57].y=250;
+                            lock[58].x=animal[58].x=460;
+                            lock[58].y=animal[58].y=330;
+                            lock[59].x=animal[59].x=270;
+                            lock[59].y=animal[59].y=300;
+                            
+                            //
+                            animal[60].x=460;
+                            animal[60].y=440;
+                            lock[61].x=animal[61].x=340;
+                            lock[61].y=animal[61].y=465;
+                            lock[62].x=animal[62].x=180;
+                            lock[62].y=animal[62].y=460;
+                            lock[63].x=animal[63].x=110;
+                            lock[63].y=animal[63].y=340;
+                            lock[64].x=animal[64].x=40;
+                            lock[64].y=animal[64].y=240;
+                            lock[65].x=animal[65].x=80;
+                            lock[65].y=animal[65].y=120;
+                            lock[66].x=animal[66].x=200;
+                            lock[66].y=animal[66].y=70;
+                            lock[67].x=animal[67].x=340;
+                            lock[67].y=animal[67].y=120;
+                            lock[68].x=animal[68].x=270;
+                            lock[68].y=animal[68].y=220;
+                            lock[69].x=animal[69].x=460;
+                            lock[69].y=animal[69].y=250;
+                            lock[70].x=animal[70].x=460;
+                            lock[70].y=animal[70].y=330;
+                            lock[71].x=animal[71].x=270;
+                            lock[71].y=animal[71].y=300;
+                            //
+                            animal[72].x=460;
+                            animal[72].y=440;
+                            lock[73].x=animal[73].x=340;
+                            lock[73].y=animal[73].y=465;
+                            lock[74].x=animal[74].x=180;
+                            lock[74].y=animal[74].y=460;
+                            lock[75].x=animal[75].x=110;
+                            lock[75].y=animal[75].y=340;
+                            lock[76].x=animal[76].x=40;
+                            lock[76].y=animal[76].y=240;
+                            lock[77].x=animal[77].x=80;
+                            lock[77].y=animal[77].y=120;
+                            lock[78].x=animal[78].x=200;
+                            lock[78].y=animal[78].y=70;
+                            lock[79].x=animal[79].x=340;
+                            lock[79].y=animal[79].y=120;
+                            lock[80].x=animal[80].x=270;
+                            lock[80].y=animal[80].y=220;
+                            lock[81].x=animal[81].x=460;
+                            lock[81].y=animal[81].y=250;
+                            lock[82].x=animal[82].x=460;
+                            lock[82].y=animal[82].y=330;
+                            lock[83].x=animal[83].x=270;
+                            lock[83].y=animal[83].y=300;
+
+                            //
+                            animal[84].x=460;
+                            animal[84].y=440;
+                            lock[85].x=animal[85].x=340;
+                            lock[85].y=animal[85].y=465;
+                            lock[86].x=animal[86].x=180;
+                            lock[86].y=animal[86].y=460;
+                            lock[87].x=animal[87].x=110;
+                            lock[87].y=animal[87].y=340;
+                            lock[88].x=animal[88].x=40;
+                            lock[88].y=animal[88].y=240;
+                            lock[89].x=animal[89].x=80;
+                            lock[89].y=animal[89].y=120;
+                            lock[90].x=animal[90].x=200;
+                            lock[90].y=animal[90].y=70;
+                            lock[91].x=animal[91].x=340;
+                            lock[91].y=animal[91].y=120;
+                            lock[92].x=animal[92].x=270;
+                            lock[92].y=animal[92].y=220;
+                            lock[93].x=animal[93].x=460;
+                            lock[93].y=animal[93].y=250;
+                            lock[94].x=animal[94].x=460;
+                            lock[94].y=animal[94].y=330;
+                            lock[95].x=animal[95].x=270;
+                            lock[95].y=animal[95].y=300;
+
+                            //
+                            animal[96].x=460;
+                            animal[96].y=440;
+                            lock[97].x=animal[97].x=340;
+                            lock[97].y=animal[97].y=465;
+                            lock[98].x=animal[98].x=180;
+                            lock[98].y=animal[98].y=460;
+                            lock[99].x=animal[99].x=110;
+                            lock[99].y=animal[99].y=340;
+                            lock[100].x=animal[100].x=40;
+                            lock[100].y=animal[100].y=240;
+                            lock[101].x=animal[101].x=80;
+                            lock[101].y=animal[101].y=120;
+                            lock[102].x=animal[102].x=200;
+                            lock[102].y=animal[102].y=70;
+                            lock[103].x=animal[103].x=340;
+                            lock[103].y=animal[103].y=120;
+                            lock[104].x=animal[104].x=270;
+                            lock[104].y=animal[104].y=220;
+                            lock[105].x=animal[105].x=460;
+                            lock[105].y=animal[105].y=250;
+                            lock[106].x=animal[106].x=460;
+                            lock[106].y=animal[106].y=330;
+                            lock[107].x=animal[107].x=270;
+                            lock[107].y=animal[107].y=300;
+
+                            //
+                            animal[108].x=460;
+                            animal[108].y=440;
+                            lock[109].x=animal[109].x=340;
+                            lock[109].y=animal[109].y=465;
+                            lock[110].x=animal[110].x=180;
+                            lock[110].y=animal[110].y=460;
+                            lock[111].x=animal[111].x=110;
+                            lock[111].y=animal[111].y=340;
+                            lock[112].x=animal[112].x=40;
+                            lock[112].y=animal[112].y=240;
+                            lock[113].x=animal[113].x=80;
+                            lock[113].y=animal[113].y=120;
+                            lock[114].x=animal[114].x=200;
+                            lock[114].y=animal[114].y=70;
+                            lock[115].x=animal[115].x=340;
+                            lock[115].y=animal[115].y=120;
+                            lock[116].x=animal[116].x=270;
+                            lock[116].y=animal[116].y=220;
+                            lock[117].x=animal[117].x=460;
+                            lock[117].y=animal[117].y=250;
+                            lock[118].x=animal[118].x=460;
+                            lock[118].y=animal[118].y=330;
+                            lock[119].x=animal[119].x=270;
+                            lock[119].y=animal[119].y=300;
+
+                            //
+                     
+
+
+                            dropDownContainer.x=491.5;
+                            dropDownContainer.y=163;
+                            
+                            //howToPlayButton.x=246;
+                            //howToPlayButton.y=280;
+                            htpButtonContainer.x=246;
+                            htpButtonContainer.y=280;
+                            //scoreBoardButton.x=246;
+                            //scoreBoardButton.y=330;
+                            scoreBoardButtonContainer.x=246;
+                            scoreBoardButtonContainer.y=330;
+                            //
+                            backButtonContainer.x=30;
+                            backButtonContainer.y=478;
+                            //
+                            nextIconContainer.x=515;
+                            nextIconContainer.y=185;
+                            //
+                            levelCompletePopUp.x=0;
+                            //
+                            submitContainer.x=380;
+                            submitContainer.y=220;
+                            //
+
+                            mainMenu_container.x=500;
+                            mainMenu_container.y=100;
+                            //
+                            retryContainer.x=530;
+                            retryContainer.y=130;
+
+                            gamePuasedIcon.x=510;
+                            gamePuasedIcon.y=376;
+                        }
+                        function renderBlocks(){
+
+                                  
+                            for(var i=0;i<10;i++){
+                          
+                            for(var j=0;j<10;j++){
+                            ii=9-i;
+                            jj=9-j;
+                            label[i][j]=1;
+                            stage.removeChild(shapecopy[ii][jj]);
+                                }
+                            }
+
+                              for(var i=0;i<10;i++){
+                              //console.log("bef"+x[i]);
+                              //console.log(x[i]);
+                              for(var j=0;j<10;j++){
+                            
+                            var ii=9-i;
+                            var jj=9-j;
+                            if(x[i][j]!=null ){
+                              //console.log(x[i][j]);
+                              shapecopy[ii][jj]=shape[x[i][j]+4].clone();
+                              //shapecopy[i][j].onMouseOver = howtoplay_onMouseOver;
+                              //shapecopy[i][j].onMouseOut = howtoplay_onMouseOut;
+                              shapecopy[ii][jj].name=""+i+""+j;
+                               //shapecopy[ii][jj].onPress = block_onPress;
+                               shapecopy[ii][jj].addEventListener("click",block_onPress);
+                               
+                              
+                              stage.addChild(shapecopy[ii][jj]);
+                              shapecopy[ii][jj].x=25+ii*44;
+                              shapecopy[ii][jj].y=50+jj*44;
+                            }
+                        }
+                        
+                        }
+                        
+                        //end of for loop for j 
+                        
+
+                       }
+                   
+                 function onFinishTween(i,j){
+                        //console.log('inside on finish tween'+i+j);
+                        TweenIsHappening=false;
+                        if(renderBlocksCalled==false){
+                        renderBlocks(); 
+                        renderBlocksCalled=true;
+                        BlocksPoppable=checkLevelOver();
+                          if(!BlocksPoppable && score>target){
+                            removeBlocks();
+                            levelComplete();
+                            /*
+                            if((findBlockLeft()==0)&&(score>target))
+                                                 {levelComplete();}
+                                          else if((findBlockLeft()==0)&&(score<target))
+                                                  {gameOver();}
+                            */
+                          }else if(!BlocksPoppable && score<target){
+                            gameOver();
+                          }else{
+                              
+                          }
+                        }
+
+                }
+function block_onPress(evt){
+        //evt.target
+        //////console.log(x);
+        var iString = evt.target.name.slice(0, 1);
+          var jString = evt.target.name.slice(1, 2);
+
+          var i = parseInt(iString,10);
+          var j=parseInt(jString,10);
+      //checking whether the blocks are same 
+      
+      for(var ij=0;ij<BlocksToBePopped.length;ij+=2){
+        if(BlocksToBePopped[ij]==i && BlocksToBePopped[ij+1]==j){
+          //console.log("");
+          sameBlocksClicked=true;
+          ////alert("here");
+        }
+        
+      }
+      console.log(BlocksToBePopped);
+        BlocksToBePopped=[];
+        
+      if(singleclicked==true && sameBlocksClicked==true && blocks2_R_Popped==false){  
+          renderBlocksCalled=false;
+        
+          ////console.log("evt.target"+evt.target.name);
+          stage.removeChild(ScoreOfBlocksToBePopped);
+          if(TweenIsHappening==false){
+            TweenIsHappening=true;
+            sound_2.play();
+            dfs(i, j,7,x[i][j]);
+            findScore();
+             //xprev=x;
+             cleanArray();
+             singleclicked=false;
+             sameBlocksClicked=false;
+          }
+        }else{
+          if(TweenIsHappening==false){
+            for(var iii=0;iii<10;iii++){
+              for(var jjj=0;jjj<10;jjj++){
+                shapecopy[9-iii][9-jjj].alpha=1;
+                label[iii][jjj]=0;
+              }
+            }
+            dfs(i, j,8,x[i][j]);
+            
+              if(blocksPopping!=1){
+              blocks2_R_Popped=false;
+              singleclicked=true;
+              stage.addChild(ScoreOfBlocksToBePopped);
+              ScoreOfBlocksToBePopped.name=""+i+""+j;
+              ScoreOfBlocksToBePopped.addEventListener("click",block_onPress);
+              ScoreOfBlocksToBePopped.text=""+blocksPopping*blocksPopping*5;
+              ScoreOfBlocksToBePopped.x=shapecopy[9-i][9-j].x+26;
+              ScoreOfBlocksToBePopped.y=shapecopy[9-i][9-j].y+10;
+              }else{
+                singleclicked=false;
+                blocks2_R_Popped=true;
+                stage.removeChild(ScoreOfBlocksToBePopped);
+              }
+              blocksPopping=0;
+          }  
+        }
+        console.log(singleclicked+""+""+"");
+      }
+        function removeBlocks(){
+            for(var ii=0;ii<10;ii++){
+              for(var jj=0;jj<10;jj++){
+                stage.removeChild(shapecopy[ii][jj]);
+                stage.update();
+              }
+            }
+        } 
+        
+        function checkLevelOver(){
+          //check for no 2 blocks
+          for(var i=1;i<9;i++){
+            for(var j=1;j<9;j++){
+              if(x[i][j]==x[i-1][j] || x[i][j]==x[i+1][j] || x[i][j]==x[i][j-1] || x[i][j]==x[i][j+1] ){
+                console.log("here");
+                if(x[i][j]!=null){
+                return true;
+                }
+              }
+            }
+          }
+          //checking for last row 
+          for(var i=1;i<9;i++){
+             var j=0;
+             if(x[i][j]==x[i-1][j] || x[i][j]==x[i+1][j]  ){
+                console.log("here");
+                if(x[i][j]!=null){
+                return true;
+                
+              }
+            }
+          }
+          //chcking for first and last column 
+          for(var j=1;j<9;j++){
+            var i=0;
+            var ii=9;
+             if(x[i][j]==x[i][j-1] || x[i][j]==x[i][j+1] || x[ii][j]==x[ii][j-1] || x[ii][j]==x[ii][j+1]  ){
+                console.log("here");
+                if(x[i][j]!=null){
+                return true;
+                
+              }
+            }
+          }
+          console.log("herefalse");
+          return false;
+        
+        }                ////console.log("prev is "+xprevCord);
+      
+        function cleanArray(){
+      for(var i=0;i<9;i++){ 
+        for(var j=0;j<9;j++){
+           xprevCord[i][j]=x[i][j];
+        }
+      }
+      var tweenCalled=false;
+      for(var i=0;i<10;i++){ 
+       var newArray = new Array();
+        var Orginal_tmp=0; 
+        for(var j=0; j<10; j++){
+          
+          if(x[i][j]==-1){
+            //no collision method 
+            Orginal_tmp++;
+             
+            
+          }else{
+            if(Orginal_tmp>0){
+                for(var tmp=j;tmp<10;tmp++){
+              if(x[i][tmp]!=-1){
+                 //if shape is not in any tween 
+                 
+                 if(true){
+                  //console.log("dest is "+shapecopy[9-i][9-tmp].y+44+"y mod 44 is "+shapecopy[9-i][9-tmp].y%44);
+                  //tweenVar[i][tmp]=TweenMax.to(shapecopy[9-i][9-tmp], 1, {y:shapecopy[9-i][9-tmp].y+44,onComplete:onFinishTween, onCompleteParams:[i, j]});
+                  //console.log("i + tmp started is"+(9-i)+":"+(9-tmp));
+                   c.Tween.removeTweens(tweenVar[i][tmp]);
+                  tweenVar[i][tmp] =new createjs.Tween( shapecopy[9-i][9-tmp]).to( { y: shapecopy[9-i][9-tmp].y+Orginal_tmp*44}, 100 ).call(onFinishTween,[tmp,Orginal_tmp]);
+                  tweenCalled=true;
+                  shapecopy[9-i][9-tmp].y++;
+
+                  }else{
+                    //incase it's already in tween 
+                   //console.log("inside else "+shapecopy[9-i][9-tmp].y%44+"fact is"+(2 + Math.floor(shapecopy[9-i][9-tmp].y / 44)));
+                    var fact= (6 + Math.floor(shapecopy[9-i][9-tmp].y/44));
+                //tweenVar[i][tmp]=TweenMax.to(shapecopy[9-i][9-tmp], 1, {y:fact*44,onComplete:onFinishTween, onCompleteParams:[i,j]}); 
+                  c.Tween.removeTweens(tweenVar[i][tmp]);
+                  tweenVar[i][tmp] =new c.Tween( shapecopy[9-i][9-tmp]).to( { y: fact*44}, 100 );
+                  ////console.log("tweenVar is "+fact*44);
+                } 
+              }
+            }
+                            
+            }
+            //xprevCord[9-i][9-j]=(9-(j+tmp))*44;
+            ////console.log();
+            if(9-(j-tmp)>-1){
+             //////console.log("j+tmpis");
+            // xprevCord[9-i][9-j]=shapecopy[9-i][9-(j-tmp)].y;
+            }
+            ////console.log(xprevCord[9-i][9-j]+"j+temp is"+(9-(j-tmp)));
+            newArray.push(x[i][j]);
+          }
+          ////console.log("prev is "+xprevCord[9-i][9-(j-tmp)]+" new is "+(9+j)*44);
+        }
+        ////console.log("newArray"+newArray);
+        
+       x[i]=newArray;
+       
+     }
+     //tweening just to call function onfinihs tween ,so that it don't get stuck on click of single element
+      if(!tweenCalled){
+      var DummyTween =new createjs.Tween( shapecopy[0][0]).to( {}, 0001 ).call(onFinishTween,[tmp,Orginal_tmp]);
+      
+      }
+     //pushing blocks horizontly
+     for(var i=1;i<10;i++){
+      //console.log(x[i]);
+        //store null items found in array x[i][j]
+        var nullcount=0;
+        for(var j=0;j<10;j++){
+          if(x[i][j]==null){
+            nullcount++;
+          }
+        }
+        if(nullcount==10){
+         // console.log("pushed horizontly"+x[i]);
+           //
+           console.log("i is "+i);
+           for(var ii=i;ii>0;ii--){
+            console.log("ii:"+ii+"ii-1 is"+ii-1);
+            //if(ii-1>-1){
+            x[ii]=x[ii-1];
+            //}
+           }
+           x[0]=[];
+        }
+
+     }
+
+      //return newArray;
+    }    
+                        // the labels, 0 means unlabeled
+                        //int label[MAX][MAX];
+                        //find_components();
+                        function dfs( xx,  y, current_label,item) {
+  if (xx < 0 || xx == row_count) return; // out of bounds
+  if (y < 0 || y == col_count) return; // out of bounds
+
+  
+  //if (x[xx][y]==current_label || x[xx][y]!=2 ) return; // already labeled or not marked with 1 in m
+  if (label[xx][y]==current_label || x[xx][y]!=item ) return;
+   
+  // mark the current cell
+  
+  label[xx][y] = current_label;
+  
+  //shapecopy[xx][y].clone();
+  if(singleclicked==true && sameBlocksClicked==true && blocks2_R_Popped==false){
+  x[xx][y]=-1;
+  stage.removeChild(shapecopy[9-xx][9-y]);
+  blocksPopped++;
+  }else{
+    BlocksToBePopped.push(xx);
+    BlocksToBePopped.push(y);
+    blocksPopping++;
+    console.log("xx is "+xx +"yy is "+y);
+    shapecopy[9-xx][9-y].alpha=0.7;
+  }
+  //stage.addChild();
+  ////console.log("herer"+xx+"y"+y);
+  // recursively mark the neighbors
+  for (var direction = 0; direction < 4; ++direction)
+    dfs(xx + dx[direction], y + dy[direction], current_label,item);
+}
+                            /*
+                        function find_components() {
+                          var component = 0;
+                          for (var i = 0; i < row_count; ++i) 
+                            for (var j = 0; j < col_count; ++j) 
+                              if (!label[i][j] && x[i][j]) dfs(i, j, ++component);
+                        }
+                        for(var i=0;i<10;i++){
+                                    //console.log("after"+x[i]);    
+                        }
+                                for(var i=0;i<10;i++){
+                                    //console.log("afterLab"+label[i]);
+                                }
+
+                        */
+                        function findScore(){
+                          stage.removeChild(scoree);
+                          score+=blocksPopped*blocksPopped*5;
+                          blocksPopped=0;
+                          scoree = new createjs.Text(score , "30px Dosis","yellow" );
+                          scoree.x=535;
+                          scoree.y=216;
+                          stage.addChild(scoree);
+                         // console.log("score is"+score);
+                        }
+
+                        function findBlockLeft(){
+                        BlocksLeft=0;
+                        for(var i=0;i<10;i++){
+                          for(var j=0;j<10;j++){
+                              if(x[i][j]!=null){
+                                BlocksLeft++;
+                              }
+                          }
+                        }
+                       // console.log("blocks left = "+BlocksLeft);
+                        return BlocksLeft;
+                        }
+
+                        function viewMain(){
+                            stage.removeAllChildren();
+                            if( document.getElementById("hello")!=null){
+                            document.getElementById("hello").style.visibility="hidden";
+                            }
+                            levelStatus();
+                            stage.addChild(mainMenu,playButtonContainer,htpButtonContainer,scoreBoardButtonContainer);
+                            
+                        }
+                        function setSubmitAlpha(){
+                            submit.alpha = 1;
+                            submit_O.alpha = 0;
+                        }
+                        function setAlpha(){
+
+                            playButton.alpha = 1;
+                            playButton_O.alpha = 0;
+                        }
+                        function setHTPAlpha(){
+                            howToPlayButton.alpha = 1;
+                            howToPlayButton_O.alpha = 0;
+                        }
+                        function setSBAlpha(){
+                            scoreBoardButtons.alpha = 1;
+                            scoreBoardButtons_O.alpha = 0;
+                        }
+                        function setBBAlpha(){
+                            backButton.alpha = 1;
+                            backButton_O.alpha = 0;
+
+                        }
+                        function setIconAlpha(){
+                            nextIcon.alpha = 1;
+                            nextIcon_O.alpha =0;
+                        }
+                        function setMMAlpha(){
+                            mainMenuButton.alpha = 1;
+                            mainMenuButton_O.alpha =0;
+                            
+                        }
+                        function setRetryAlpha(){
+                            retry.alpha = 1;
+                            retry_O.alpha = 0;
+
+                        }
+                        function setPaused_quit_a(){
+                           paused_quit.alpha=1;
+                           paused_quit_o.alpha=0;
+                        }
+                        function setPaused_resume_a(){
+                          paused_resume.alpha=1;
+                          paused_resume_o.alpha=0;
+                        }
+                        function setPaused_reset_a(){
+                          paused_restart_o.alpha=0;
+                          paused_restart.alpha=1;
+                        }
+                        
+                        function onPlay(){
+                            //gameOver();
+                            //ShowhighScore();
+                            onForest();
+                            //levelComplete();
+                            
+                        
+                        }
+                        ///////////////////////////////////////////Event handler s for options mode ////////
+                        function onGamePuasedIconClicked(){
+                          OptionView();
+                        }
+                        function onQuitContainerClicked(){
+                          //quit button called
+                          resetVar();
+                          stage.removeAllChildren();
+                          viewMain();
+                        }
+                        function onQuitContainerRollover(){
+                         paused_quit_o.alpha=1;
+                          paused_quit.alpha=0;
+                        }
+                        function onQuitContainerRollOut(){
+                          setPaused_quit_a();
+                        }
+                        function onResetContainerClicked(){
+                          //restart the level
+                           stage.removeChild(pause_bg,hourGlass,resetContainer,resumeContainer,quitContainer,gamePausedText);
+                           
+                           stage.addChild(bg1,level,scoree,targett,gamePuasedIcon);
+
+                           score = JSON.decode(localStorage["number"+number]);
+                            scoree.text=score;
+                           
+                            resetVar();
+                            renderBlocks();
+                            
+                        }
+                        function onResetContainerRollover(){
+                          paused_restart.alpha=0;
+                          paused_restart_o.alpha=1;
+                        }
+                        function onResetContainerRollOut(){
+                          setPaused_reset_a();
+                        }
+                        function onResumeContainerClicked(){
+                          //Resume back to level
+                           stage.removeChild(pause_bg,hourGlass,resetContainer,resumeContainer,quitContainer,gamePausedText);
+                        }
+                        function onResumeContainerRollover(){
+                          paused_resume.alpha=0;
+                          paused_resume_o.alpha=1;
+                        }
+                        function onResumeContainerRollOut(){
+                          setPaused_resume_a();
+                        }
+
+                          function onLevelMap(){
+                            stage.removeChild(dropDownContainer);
+                        }
+                        function onPlayRoll(){
+                            playButton.alpha=0;
+                            playButton_O.alpha=1;
+                            
+                        }
+                        function onPlayRollOut(){
+                            setAlpha();
+                            //console.log("hello rolled out");
+                        }
+                        function onLevelSelect(){
+                          ////alert()
+                          if(!dropDownDown){
+                            stage.addChild(dropDownContainer);
+                            stage.addChild();
+                            dropDownDown=true;
+                          }else{
+                            stage.removeChild(dropDownContainer);
+                            dropDownDown=false;
+                          }
+                        }
+                        function onForest(){
+                            stage.removeAllChildren();
+                             score = JSON.decode(localStorage["number"+number]);    
+                            stage.addChild(forest,animal[0]);
+                            
+                            for(var i=0;i<=11;i++){
+                                var playerProgress = JSON.decode(localStorage["forest_lock"+i]);
+                                if(lock[i].unlocked==false)
+                                stage.addChild(lock[i]);
+                                else
+                                stage.addChild(animal[i]);
+                                if(number==i){
+                                  stage.removeChild(lock[i]);
+                                  stage.addChild(animal[i]);
+                                  localStorage.removeItem("number");
+                                  localStorage["number"] = JSON.encode(number);
+                                 // scoreCache[number]
+                                }
+                            }
+                            for(var i=0;i<number;i++){
+                              stage.removeChild(lock[i]);
+                               if(i<12){
+                                stage.addChild(animal[i]);
+                               }
+                            }
+                            stage.addChild(levelSelect);
+                        }
+                        
+                        
+
+                        function resetVar(){
+                            for(var i=0;i<10;i++){
+                                for(var j=0;j<10;j++){
+
+                      x[i][j]=1+Math.floor(Math.random()*5);
+                     // console.log("x[][]"+x[i][j]);
+                      tweenVar[i][j]=1;
+                      xprevCord[i][j]=1;
+
+                      label[i][j]=1;
+                    
+                                }
+                            }
+                        }    
+                        
+                        function onHTP(){
+                            stage.removeAllChildren();
+                            stage.addChild(htp_screen,backButtonContainer);
+                            
+                        }
+                        function onHTPRoll(){
+                            howToPlayButton.alpha=0;
+                            howToPlayButton_O.alpha=1;
+
+                        }
+                        function onHTPRollOut(){
+                            setHTPAlpha();
+
+                        }                
+                        function onBack(){
+                            viewMain();
+
+                        }
+                        function onBBRoll(){
+                            backButton.alpha=0;
+                            backButton_O.alpha=1;
+                        }
+                        function onBBRollOut(){
+                            setBBAlpha();
+                        }
+                        function onScore(){
+                            stage.removeAllChildren();
+                            ShowhighScore();
+                            backButtonContainer.x=275;
+                            stage.addChild(scoreBoard,backButtonContainer);
+
+                        }
+                        function onSBRoll(){
+                            scoreBoardButtons.alpha=0;
+                            scoreBoardButtons_O.alpha=1;
+
+                        }
+                        function onSBRollOut(){
+                            setSBAlpha();
+
+                        }
+                        //level complete
+                        function levelComplete(){
+                            //stage.removeAllChildren();
+                            number++;
+                            //alert(number);
+                            localStorage.removeItem("number");
+                            localStorage["number"] = JSON.encode(number);
+                            console.log("number"+number);
+                            findBlockLeft();
+                            bonusText.text=""+BlocksLeft;
+                            bonusText.x=310;
+                            bonusText.y=200;
+
+                            if((lock[number]!=undefined)){
+                                lock[number].unlocked=true;
+                                animal[number].show=true;
+
+                            stage.addChild(animal[number],bonusText);
+                            animalFacts[number-1].x=50;
+                            animalFacts[number-1].y=331;
+                            //score=0;
+                            //score
+                            points_text.text=""+score;
+                            points_text.x= 160;
+                            points_text.y= 142;
+
+                            score+=BlocksLeft*5;
+                            RemainingScore_Text.text=BlocksLeft+" x "+"5 = "+BlocksLeft*5; 
+                            RemainingScore_Text.x=120;
+                            RemainingScore_Text.y=220;
+                            localStorage.removeItem("number"+number);
+                            localStorage["number"+number]=JSON.encode(score);
+                            scoree = new createjs.Text(score , "30px Dosis","yellow" );
+                            scoree.x=365;
+                            scoree.y=190;
+                            
+                            stage.addChild(levelCompletePopUp,nextIconContainer,animalFacts[number-1],scoree,RemainingScore_Text,points_text);
+                            
+                            //ShowhighScore();
+                            }else if(number==12){
+
+                            }else if(number==23){
+
+                            }else{
+                                gameOver();
+                            }
+                            
+                        }
+                        function OptionView(){
+                          gamePausedText.x=160 ;gamePausedText.y=140;
+                          hourGlass.x=160 ;hourGlass.y=236;
+                          quitContainer.x=350 ;quitContainer.y=333 ;
+                          resumeContainer.x=319 ;resumeContainer.y=295;
+                          resetContainer.x=319 ;resetContainer.y=255;
+                          stage.addChild(pause_bg,hourGlass,resetContainer,resumeContainer,quitContainer,gamePausedText);
+                        }
+                        function gameOver(){
+                            
+                           
+                            var cartDiv=document.createElement("div");
+                            document.body.appendChild(cartDiv);
+                            cartDiv.id = "EnterQuestionDiv";
+                            document.getElementById(cartDiv.id).innerHTML="<input type=\"text\" id=\"hello\" size=\"12\" maxlength="+20+"></input>";
+                           
+                             
+                            var enterquestion = document.getElementById(cartDiv.id);
+                            //App.enterquestion[i].name=i;
+                            enterquestionDom = new createjs.DOMElement(enterquestion);
+                            enterquestionDom.x =250*scaleFactor;
+                            enterquestionDom.y = 230*scaleFactor;
+                            //enterquestionDom[i].text=""+i; 
+                            animalFacts[number].x=50;
+                            animalFacts[number].y=331;
+                            scoree = new createjs.Text("Your score is "+score+"!" , "30px Dosis","white" );
+                            scoree.x=220;
+                            scoree.y=175;
+                            stage.addChild(gameCompletePopUp,mainMenu_container,enterquestionDom,submitContainer,retryContainer,animalFacts[number],scoree);
+                            sound_1.play();  
+
+                       
+                        }
+                        function onSubmitt(){
+
+        var user_score=score;
+        var user_name=$('#hello').val();
+
+       if(user_name)
+        {
+            //console.log("score:",user_score);
+            //console.log("name:",user_name);
+            data = {'user_name':user_name,'user_score':user_score,'reg_flag':1};
+            $.ajax({
+                url: 'score.php',
+                type: 'get',
+                data : data,
+                dataType : 'text',
+                success: function(){
+                    console.log("success1");
+                    datas = {'board_flag':1};
+                    $.ajax({
+                        url: 'score.php',
+                        type: 'get',
+                        data : datas,
+                        // dataType : 'text',
+                        dataType : 'json',
+                        success: function(data){
+                            min_data = {"chk_flag":1};
+                            $.ajax({
+                                url: 'score.php',
+                                type: 'get',
+                                data : min_data,
+                                dataType : 'text',
+                                success: function(msg){
+                                    localStorage.setItem('min_value', msg);
+                                    stage.removeAllChildren();
+                                    onScore();
+                                }
+                            });
+
+                            
+                        }
+                    });
+                    //back_layer.remove();
+                    //createHighScoreScene();
+
+                    $('#hello').val('');
+                }
+            });
+        }
+       else{
+            console.log("Enter the name correctly!");
+        }
+    
+                        }
+                        function onSubmittRoll(){
+                            submit.alpha=1;
+                            submit_O.alpha=1
+                        }
+                        function onSubmittRollOut(){
+                            setSubmitAlpha();
+                        }
+
+
+                        function levelStatus(){
+                           
+                                 if(number<11){
+                                    africaTxt.locked;
+                                  }
+                                  else if(number>11&&number<23){
+                                      africaTxt.color = "white";
+                                      africaTxt.cursor="pointer";
+                                      africaTxt.addEventListener("click",onAfrica);
+                                  
+                                  }
+                                  else if(number>23&&number<35){
+                                      africaTxt.color = "white";
+                                      africaTxt.cursor="pointer";
+                                      dinosaurTxt.color="white";
+                                      dinosaurTxt.cursor="pointer";
+                                      africaTxt.addEventListener("click",onAfrica);
+                                      dinosaurTxt.addEventListener("click",onDinosaur);
+
+
+                                  }
+                                  else if(number>35&&number<47){
+                                      africaTxt.color = "white";
+                                      africaTxt.cursor="pointer";
+                                      dinosaurTxt.color="white";
+                                      dinosaurTxt.cursor="pointer";
+                                      africaTxt.addEventListener("click",onAfrica);
+                                      dinosaurTxt.addEventListener("click",onDinosaur);
+                                      level4.color="white";
+                                      level4.addEventListener("click",onlevel4);
+                                      level4.cursor="pointer";
+                                    
+
+                                  }
+                                  else if(number>47&&number<59){
+                                      africaTxt.color = "white";
+                                      africaTxt.cursor="pointer";
+                                      dinosaurTxt.color="white";
+                                      dinosaurTxt.cursor="pointer";
+                                      africaTxt.addEventListener("click",onAfrica);
+                                      dinosaurTxt.addEventListener("click",onDinosaur);
+                                       level4.color="white";
+                                      level4.addEventListener("click",onlevel4);
+                                      level5.color="white";
+                                      level5.addEventListener("click",onlevel5);
+                                      level4.cursor="pointer";
+                                      level5.cursor="pointer";
+                                      
+
+                                  }
+                                  else if(number>59&&number<71){
+                                      africaTxt.color = "white";
+                                      africaTxt.cursor="pointer";
+                                      dinosaurTxt.color="white";
+                                      dinosaurTxt.cursor="pointer";
+                                      africaTxt.addEventListener("click",onAfrica);
+                                      dinosaurTxt.addEventListener("click",onDinosaur);
+                                       level4.color="white";
+                                      level4.addEventListener("click",onlevel4);
+                                      level5.color="white";
+                                      level5.addEventListener("click",onlevel5);
+                                      level6.color="white";
+                                      level6.addEventListener("click",onlevel6);
+                                      level4.cursor="pointer";
+                                      level5.cursor="pointer";
+                                      level6.cursor="pointer";
+                                     
+
+                                  }
+                                  else if(number>71&&number<83){
+                                      africaTxt.color = "white";
+                                      africaTxt.cursor="pointer";
+                                      dinosaurTxt.color="white";
+                                      dinosaurTxt.cursor="pointer";
+                                      africaTxt.addEventListener("click",onAfrica);
+                                      dinosaurTxt.addEventListener("click",onDinosaur);
+                                       level4.color="white";
+                                      level4.addEventListener("click",onlevel4);
+                                      level5.color="white";
+                                      level5.addEventListener("click",onlevel5);
+                                      level6.color="white";
+                                      level6.addEventListener("click",onlevel6);
+                                      level7.color="white";
+                                      level7.addEventListener("click",onlevel7);
+                                      level4.cursor="pointer";
+                                      level5.cursor="pointer";
+                                      level6.cursor="pointer";
+                                      level7.cursor="pointer";
+                                      
+
+                                  }
+                                  else if(number>83&&number<95){
+                                      africaTxt.color = "white";
+                                      africaTxt.cursor="pointer";
+                                      dinosaurTxt.color="white";
+                                      dinosaurTxt.cursor="pointer";
+                                      africaTxt.addEventListener("click",onAfrica);
+                                      dinosaurTxt.addEventListener("click",onDinosaur);
+                                       level4.color="white";
+                                      level4.addEventListener("click",onlevel4);
+                                      level5.color="white";
+                                      level5.addEventListener("click",onlevel5);
+                                      level6.color="white";
+                                      level6.addEventListener("click",onlevel6);
+                                      level7.color="white";
+                                      level7.addEventListener("click",onlevel7);
+                                      level8.color="white";
+                                      level8.addEventListener("click",onlevel8);
+                                      level4.cursor="pointer";
+                                      level5.cursor="pointer";
+                                      level6.cursor="pointer";
+                                      level7.cursor="pointer";
+                                      level8.cursor="pointer";
+                                      
+
+                                  }
+                                  else if(number>95&&number<107){
+                                      africaTxt.color = "white";
+                                      africaTxt.cursor="pointer";
+                                      dinosaurTxt.color="white";
+                                      dinosaurTxt.cursor="pointer";
+                                      africaTxt.addEventListener("click",onAfrica);
+                                      dinosaurTxt.addEventListener("click",onDinosaur);
+                                       level4.color="white";
+                                      level4.addEventListener("click",onlevel4);
+                                      level5.color="white";
+                                      level5.addEventListener("click",onlevel5);
+                                      level6.color="white";
+                                      level6.addEventListener("click",onlevel6);
+                                      level7.color="white";
+                                      level7.addEventListener("click",onlevel7);
+                                      level8.color="white";
+                                      level8.addEventListener("click",onlevel8);
+                                      level9.color="white";
+                                      level9.addEventListener("click",onlevel9);
+                                      level4.cursor="pointer";
+                                      level5.cursor="pointer";
+                                      level6.cursor="pointer";
+                                      level7.cursor="pointer";
+                                      level8.cursor="pointer";
+                                      level9.cursor="pointer";
+                                      
+                                      
+
+                                  }
+                                
+                                
+                        }
+                        function onNext(){
+                            stage.removeAllChildren();
+                            //number++;
+                         if(number<12){
+                            target=(number+1)*1500;
+                            }else if(number<24){
+                              //alert("target"+target);
+                              target=(12)*1500+(number-11)*1600;
+                            }else if(number<36){
+                              target=(12)*1500+(12)*1600+(number-23)*1700;
+                              
+                            }else if(number<48){
+                              target=(12)*1500+(12)*1600+(12)*1700+(number-35)*1800;
+                              
+                            }else if(number<60){
+                              target=(12)*1500+(12)*1600+(12)*1700+(12)*1800+(number-47)*1900;
+                              
+                            }else if(number<72){
+                              target=(12)*1500+(12)*1600+(12)*1700+(12)*1800+(12)*1900+(number-59)*2000;
+                              
+                            }else if(number<84){
+                              target=(12)*1500+(12)*1600+(12)*1700+(12)*1800+(12)*1900+(12)*2000+(number-71)*2100;
+                              
+                            }else if(number<96){
+                              target=(12)*1500+(12)*1600+(12)*1700+(12)*1800+(12)*1900+(12)*2000+(12)*2100+(number-83)*2200;
+                              
+                            }else if(number<108){
+                              target=(12)*1500+(12)*1600+(12)*1700+(12)*1800+(12)*1900+(12)*2000+(12)*2100+(12)*2200+(number-95)*2300;
+                              
+                            }else if(number<120){
+                              target=(12)*1500+(12)*1600+(12)*1700+(12)*1800+(12)*1900+(12)*2000+(12)*2100+(12)*2200+(12)*2300+(number-107)*2400;
+                              
+                            }
+                            
+
+                            level = new createjs.Text(number+1 , "30px Dosis","yellow"); 
+                            level.x=550;
+                            level.y=305;
+                            targett = new createjs.Text(target , "30px Dosis","yellow" );
+                            targett.x=530;
+                            targett.y=127;//y=216 exact for score
+                            //stage.removeChild(lock[number]);
+                            //stage.addChild(animal[number]);
+                            if(lock[number]!=undefined){
+                            lock[number].unlocked=true;
+                            animal[number].show=true;
+                            stage.addChild(bg1,level,targett);
+                            resetVar();
+                            //stage.addChild(level,targett);
+                            //renderBlocks();
+                            if(number<12){
+                             onForest();
+                            }else if(number<24){
+                              onAfrica();
+                            }else if(number<36){
+                              onDinosaur();
+                            }else if(number<48){
+                              onlevel4();
+                            }else if(number<60){
+                              onlevel5();
+                            }else if(number<72){
+                              onlevel6();
+                            }else if(number<84){
+                              onlevel7();
+                            }else if(number<96){
+                              onlevel8();
+                            }else if(number<108){
+                              onlevel9();
+                            }
+                            //onAnimal0();
+                            }
+                            else{
+                              gameOver();
+                            }
+                            
+                           
+                        }
+                        function onNRoll(){
+                            nextIcon.alpha = 1;
+                            nextIcon_O.alpha = 1;
+
+                        }
+                        function onNRollOut(){
+                            setIconAlpha();
+
+                        }
+                        ///
+                        function onRetry(){
+                            stage.removeAllChildren();
+                            
+                            if(document.getElementById("hello")!=null){
+                            document.getElementById("hello").style.visibility="hidden";
+                            }
+
+                            animal[0].number=100;
+                            animal[12].number=7000;
+                            animal[24].number=19000;
+                            //BlocksLeft=0;
+
+                            console.log("i="+number);
+                            score = JSON.decode(localStorage["number"+number]); 
+                            //score=0;
+                            
+                            stage.removeAllChildren();
+                            //stage.removeChild(gameCompletePopUp);
+                           if(number<12){
+                            target=(number+1)*1500;
+                            }else if(number<24){
+                              //alert("target"+target);
+                              target=(12)*1500+(number-11)*1600;
+                            }else if(number<36){
+                              target=(12)*1500+(12)*1600+(number-23)*1700;
+                              
+                            }else if(number<48){
+                              target=(12)*1500+(12)*1600+(12)*1700+(number-35)*1800;
+                              
+                            }else if(number<60){
+                              target=(12)*1500+(12)*1600+(12)*1700+(12)*1800+(number-47)*1900;
+                              
+                            }else if(number<72){
+                              target=(12)*1500+(12)*1600+(12)*1700+(12)*1800+(12)*1900+(number-59)*2000;
+                              
+                            }else if(number<84){
+                              target=(12)*1500+(12)*1600+(12)*1700+(12)*1800+(12)*1900+(12)*2000+(number-71)*2100;
+                              
+                            }else if(number<96){
+                              target=(12)*1500+(12)*1600+(12)*1700+(12)*1800+(12)*1900+(12)*2000+(12)*2100+(number-83)*2200;
+                              
+                            }else if(number<108){
+                              target=(12)*1500+(12)*1600+(12)*1700+(12)*1800+(12)*1900+(12)*2000+(12)*2100+(12)*2200+(number-95)*2300;
+                              
+                            }else if(number<120){
+                              target=(12)*1500+(12)*1600+(12)*1700+(12)*1800+(12)*1900+(12)*2000+(12)*2100+(12)*2200+(12)*2300+(number-107)*2400;
+                              
+                            }
+                            level = new createjs.Text(number+1 , "30px Dosis","yellow");
+                            level.x=550;
+                            level.y=305;//y=216 exact for score
+                            
+                            scoree = new createjs.Text(score , "30px Dosis","yellow" );
+                            scoree.x=550;
+                            scoree.y=216;
+
+                            targett = new createjs.Text(target , "30px Dosis","yellow" );
+                            targett.x=530;
+                            targett.y=127;
+                            
+                            stage.addChild(bg1,level,scoree,targett,gamePuasedIcon);
+
+                            resetVar();
+                            renderBlocks();
+                            
+                        }
+                        function onRetryRoll(){
+                            retry.alpha = 1;
+                            retry_O.alpha = 1;
+                        }
+                        function onRetryRollOut(){
+                            setRetryAlpha();
+                        }
+
+
+                        function onMain(){
+                            if( document.getElementById("hello")!=null){
+                            document.getElementById("hello").style.visibility="hidden";
+                            }
+                            onPlay();
+                        }
+                        function onMRoll(){
+                            mainMenuButton.alpha = 1;
+                            mainMenuButton_O.alpha = 1;
+                        }
+                        function onMRollOut(){
+                            setMMAlpha();
+
+                        }
+                        function onAfrica(){
+                            //stage.removeAllChildren();
+                            //stage.addChild(africa);
+                            stage.removeAllChildren();
+                             score = JSON.decode(localStorage["number"+number]);    
+                            stage.addChild(africa,animal[12]);
+                            
+                            for(var i=13;i<=23;i++){
+                                var playerProgress = JSON.decode(localStorage["forest_lock"+i]);
+                                if(lock[i].unlocked==false)
+                                stage.addChild(lock[i]);
+                                else
+                                stage.addChild(animal[i]);
+                                if(number==i){
+                                  stage.removeChild(lock[i]);
+                                  stage.addChild(animal[i]);
+                                  localStorage.removeItem("number");
+                                  localStorage["number"] = JSON.encode(number);
+                                 // scoreCache[number]
+                                }
+                            }
+                            for(var i=13;i<number;i++){
+                              stage.removeChild(lock[i]);
+                              if(i<24){
+                              stage.addChild(animal[i])
+                              }
+                              
+                            }
+                            stage.addChild(levelSelect);
+                            
+                        }
+                        function onDinosaur(){
+                            //stage.removeAllChildren();
+                            //stage.addChild(africa);
+                            stage.removeAllChildren();
+                            score = JSON.decode(localStorage["number"+number]);    
+                            stage.addChild(dinosaur,animal[24]);
+                            
+                            for(var i=24;i<=35;i++){
+                                var playerProgress = JSON.decode(localStorage["forest_lock"+i]);
+                                if(lock[i].unlocked==false)
+                                stage.addChild(lock[i]);
+                                else
+                                stage.addChild(animal[i]);
+                                if(number==i){
+                                  stage.removeChild(lock[i]);
+                                  stage.addChild(animal[i]);
+                                  localStorage.removeItem("number");
+                                  localStorage["number"] = JSON.encode(number);
+                                 // scoreCache[number]
+                                }
+                            }
+                            for(var i=24;i<number;i++){
+                              stage.removeChild(lock[i]);
+                              if(i<36){
+                              stage.addChild(animal[i])
+                              }
+                            }
+                            stage.addChild(levelSelect);
+                        }
+                        function onlevel4(){
+                            stage.removeAllChildren();
+                             score = JSON.decode(localStorage["number"+number]);    
+                            stage.addChild(dinosaur4,animal[36]);
+                            
+                            for(var i=36;i<=47;i++){
+                                var playerProgress = JSON.decode(localStorage["forest_lock"+i]);
+                                if(lock[i].unlocked==false)
+                                stage.addChild(lock[i]);
+                                else
+                                stage.addChild(animal[i]);
+                                if(number==i){
+                                  stage.removeChild(lock[i]);
+                                  stage.addChild(animal[i]);
+                                  localStorage.removeItem("number");
+                                  localStorage["number"] = JSON.encode(number);
+                                 // scoreCache[number]
+                                }
+                            }
+                            for(var i=36;i<number;i++){
+                              stage.removeChild(lock[i]);
+                              if(i<48){
+                              stage.addChild(animal[i])
+                              }
+
+                            }
+                            stage.addChild(levelSelect);
+
+                        }
+                        function onlevel5(){
+                            stage.removeAllChildren();
+                             score = JSON.decode(localStorage["number"+number]);    
+                            stage.addChild(dinosaur5,animal[48]);
+                            
+                            for(var i=48;i<=59;i++){
+                                var playerProgress = JSON.decode(localStorage["forest_lock"+i]);
+                                if(lock[i].unlocked==false)
+                                stage.addChild(lock[i]);
+                                else
+                                stage.addChild(animal[i]);
+                                if(number==i){
+                                  stage.removeChild(lock[i]);
+                                  stage.addChild(animal[i]);
+                                  localStorage.removeItem("number");
+                                  localStorage["number"] = JSON.encode(number);
+                                 // scoreCache[number]
+                                }
+                            }
+                            for(var i=48;i<number;i++){
+                              stage.removeChild(lock[i]);
+                               if(i<60){
+                              stage.addChild(animal[i])
+                              }
+
+                            }
+                            stage.addChild(levelSelect);
+
+                        }
+                        function onlevel6(){
+                            stage.removeAllChildren();
+                             score = JSON.decode(localStorage["number"+number]);    
+                            stage.addChild(dinosaur6,animal[60]);
+                            
+                            for(var i=60;i<=71;i++){
+                                var playerProgress = JSON.decode(localStorage["forest_lock"+i]);
+                                if(lock[i].unlocked==false)
+                                stage.addChild(lock[i]);
+                                else
+                                stage.addChild(animal[i]);
+                                if(number==i){
+                                  stage.removeChild(lock[i]);
+                                  stage.addChild(animal[i]);
+                                  localStorage.removeItem("number");
+                                  localStorage["number"] = JSON.encode(number);
+                                 // scoreCache[number]
+                                }
+                            }
+                            for(var i=60;i<number;i++){
+                              stage.removeChild(lock[i]);
+                               if(i<72){
+                              stage.addChild(animal[i])
+                              }
+
+                            }
+                            stage.addChild(levelSelect);
+
+                        }
+                        function onlevel7(){
+                            stage.removeAllChildren();
+                             score = JSON.decode(localStorage["number"+number]);    
+                            stage.addChild(dinosaur7,animal[72]);
+                            
+                            for(var i=72;i<=83;i++){
+                                var playerProgress = JSON.decode(localStorage["forest_lock"+i]);
+                                if(lock[i].unlocked==false)
+                                stage.addChild(lock[i]);
+                                else
+                                stage.addChild(animal[i]);
+                                if(number==i){
+                                  stage.removeChild(lock[i]);
+                                  stage.addChild(animal[i]);
+                                  localStorage.removeItem("number");
+                                  localStorage["number"] = JSON.encode(number);
+                                 // scoreCache[number]
+                                }
+                            }
+                            for(var i=72;i<number;i++){
+                              stage.removeChild(lock[i]);
+                               if(i<84){
+                              stage.addChild(animal[i])
+                              }
+
+                            }
+                            stage.addChild(levelSelect);
+                          
+                        }
+                        function onlevel8(){
+                            stage.removeAllChildren();
+                             score = JSON.decode(localStorage["number"+number]);    
+                            stage.addChild(dinosaur8,animal[84]);
+                            
+                            for(var i=84;i<=95;i++){
+                                var playerProgress = JSON.decode(localStorage["forest_lock"+i]);
+                                if(lock[i].unlocked==false)
+                                stage.addChild(lock[i]);
+                                else
+                                stage.addChild(animal[i]);
+                                if(number==i){
+                                  stage.removeChild(lock[i]);
+                                  stage.addChild(animal[i]);
+                                  localStorage.removeItem("number");
+                                  localStorage["number"] = JSON.encode(number);
+                                 // scoreCache[number]
+                                }
+                            }
+                            for(var i=84;i<number;i++){
+                              stage.removeChild(lock[i]);
+                               if(i<96){
+                              stage.addChild(animal[i])
+                              }
+
+                            }
+                            stage.addChild(levelSelect);
+                          
+                        }
+                        function onlevel9(){
+                            stage.removeAllChildren();
+                             score = JSON.decode(localStorage["number"+number]);    
+                            stage.addChild(dinosaur9,animal[96]);
+                            
+                            for(var i=96;i<=107;i++){
+                                var playerProgress = JSON.decode(localStorage["forest_lock"+i]);
+                                if(lock[i].unlocked==false)
+                                stage.addChild(lock[i]);
+                                else
+                                stage.addChild(animal[i]);
+                                if(number==i){
+                                  stage.removeChild(lock[i]);
+                                  stage.addChild(animal[i]);
+                                  localStorage.removeItem("number");
+                                  localStorage["number"] = JSON.encode(number);
+                                 // scoreCache[number]
+                                }
+                            }
+                            for(var i=96;i<number;i++){
+                              stage.removeChild(lock[i]);
+                              if(i<108){
+                              stage.addChild(animal[i])
+                              }
+
+                            }
+                            stage.addChild(levelSelect);
+                          
+                        }
+                        function onlevel10(){
+                            stage.removeAllChildren();
+                             score = JSON.decode(localStorage["number"+number]);    
+                            stage.addChild(dinosaur10,animal[108]);
+                            
+                            for(var i=108;i<=119;i++){
+                                var playerProgress = JSON.decode(localStorage["forest_lock"+i]);
+                                if(lock[i].unlocked==false)
+                                stage.addChild(lock[i]);
+                                else
+                                stage.addChild(animal[i]);
+                                if(number==i){
+                                  stage.removeChild(lock[i]);
+                                  stage.addChild(animal[i]);
+                                  localStorage.removeItem("number");
+                                  localStorage["number"] = JSON.encode(number);
+                                 // scoreCache[number]
+                                }
+                            }
+                            for(var i=108;i<number;i++){
+                              stage.removeChild(lock[i]);
+                               if(i<120){
+                              stage.addChild(animal[i])
+                              }
+
+                            }
+                            stage.addChild(levelSelect);
+                        }
+                        //display highScore
+                function ShowhighScore(){
+                  if( document.getElementById("hello")!=null){
+                            document.getElementById("hello").style.visibility="hidden";
+                            }
+                  datas = {'board_flag':1};
+                  $.ajax({
+                        url: 'score.php',
+                        type: 'get',
+                        data : datas,
+                        //  dataType : 'text',
+                        dataType : 'json',
+                        success: function(data){
+
+                            for(i=0;i<data.length;i++) {
+                                var tmpName=data[i].name;
+                                if(tmpName.length>12)
+                                {
+                                    tmpName=data[i].name.substr(0,12);
+                                    tmpName+="...";
+                                }
+                                console.log("tmpName"+tmpName+""+data[i].score);
+                                for(var j=0,yy=210;j<data.length;yy+=22,j++){
+                                 namee[j] = new createjs.Text(j+1+"."+data[j].name.substr(0,12),"18px edosz","white");
+                                dataa[j] = new createjs.Text(data[j].score,"18px edosz","white");
+                                namee[j].x = 200;
+                                namee[j].y = yy;
+                                dataa[j].x = 400;
+                                dataa[j].y = yy;
+                                stage.addChild(namee[j],dataa[j]);
+                                }
+                                
+
+                                //var dataa = new createjs.Text(data[i],"");
+                                /*
+                                $('.lead ul').append(
+                                    "<li><div style='position:relative'>" +
+                                        "<span class='c1'>"+(i+1)+"</span>" +
+                                        "<span class='c2'>"+tmpName+"</span>" +
+                                        "<span class='c3'>"+data[i].score+"</span>"+
+                                        "</div>"+
+                                        "</li>"
+                                );
+                                */
+                            }
+
+                //            var str="<div class='high_score_col1' ><table>";
+                //            for(i=0;i<data.length;i++) {
+                //                str+="<tr>" +
+                //                                "<td width='30px' style='color: green;text-align: left'>"+(i+1)+"</td>" +
+                //                                "<td width='160px'>"+data[i].name+"</td>" +
+                //                                "<td width='50px'>"+data[i].score+"</td>" +
+                //                         "</tr>";
+                //
+                //            }
+                //           str+="</table></div>";
+                //           //lbl_score.dom.innerHTML=str;
+                //            $('.lbl_score').html(str);
+
+                              
+                        }
+                    });
+                    }
+
+
+
+
+
+
+                        function stagePressHandler(e){
+
+
+
+                            console.log(parseInt(e.stageX-canvas.width)+" ::: "+parseInt(e.stageY-canvas.height));
+                        }
+                        /////////////////////////ticker/////////////////////////////////////
+  
+                        function tick(){
+                        ////////////console.log('In fucntion tick');
+                         //checking collision between 
+
+                          
+                        stage.update();
+                            }   
+
+
+        </script>
+
+</html>
