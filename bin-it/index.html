@@ -1,0 +1,2488 @@
+
+<?php
+ $uname = "";
+ $readonly = "";
+ if(empty($_REQUEST['user_name'])) {
+  $uname = "";
+  $readonly = "";
+ }else{
+  $uname = $_REQUEST['user_name'];
+ // $readonly = " readonly ";
+  $readonly = " disabled ";
+ }
+?>
+<html>
+         
+           <head>
+                <style type="text/css">
+            
+                        @font-face {
+                            font-family: "Vogue Cyr";
+                            src: url(VOGCYRBO_0.TTF) format("truetype");
+                            
+                        }
+                       
+                        
+        
+    
+                </style>
+    
+  
+           </head>
+
+
+                <title>Bin It</title>
+                <meta charset="utf-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+                        
+              <script type="text/javascript" src="preloadjs-NEXT.min.js"></script>
+              <script src="createjs.js"></script>
+              <script type="text/javascript" src="ndgmr.Collision.js"></script>
+              <script type="text/javascript" src="easeljs-0.7.0.min.js"></script>
+              <script type="text/javascript" src="tweenjs-0.5.0.min.js"></script>
+              <script type="text/javascript" src="tweenmax.js"></script>
+              <script type="text/javascript" src="database.js"></script>
+              <script type="text/javascript" src="howler.js"></script>
+               
+              
+
+<!--
+                     EaselJS library for work with canvas
+                         
+                <script src="http://code.createjs.com/preloadjs-0.4.0.min.js"></script>
+                 EaselJS library for work with canvas
+
+                <script src="http://code.createjs.com/easeljs-0.7.0.min.js"></script>
+
+                <script src="http://cdnjs.cloudflare.com/ajax/libs/gsap/latest/TweenMax.min.js"></script>
+           -->
+            <body bgcolor="#000000">
+
+
+            </body>
+                            <style>
+
+                                    .mouseDown{
+                                                cursor:url(images/grab.png), auto;
+                                           }
+
+                           
+                                    canvas {
+                                      
+
+                                           
+                                                background-color: #000000;
+                                                background-color: black;
+                                                position: absolute;
+                                                cursor: url(images/hand.png), auto;
+
+
+                                                
+                                            }
+                                            .pointer         { cursor: url(images/hand.png), auto; }
+                                           
+                                            input {
+                                            
+                                      font-family: "Helvetica Neue", "Cinzel", Arial, sans-serif;
+                                      border:1px solid #ccc;
+
+                                      
+                                      width:60px;
+                                      font-weight: bold;
+                                      text-align: center;
+                                      width: 394px;
+                                      min-height:60px;
+                                      display:block;
+                                      cursor:default;  
+                                      border: 0px;
+                                      background: transparent;
+                                      background-image: url(images/input.png);
+                                      background-position: 0 1px;
+                                      background-repeat: no-repeat;
+                                      outline: none;
+
+
+                                    }    
+
+
+
+                            </style>
+
+                    <script>
+                    
+                    var stage,name,loading1;
+                    var update;
+                    var scaleFactor, W, H;
+                    var filesloaded=0;
+                    ////
+                    var startButton,startButton_O,intro,mainMenu,playButton,playButton_O,scoreBoardButtons,scoreBoardButtons_O,howToPlayButton,howToPlayButton_O;
+                    var htp_screen,backButton,backButton_O;
+                    var round;
+                    var gameCompletePopUp,mainMenuButton,mainMenuButton_O,levelCompletePopUp,nextIcon,nextIcon_O,shade;
+                    
+                    var namee = new Array();
+                    var dataa = new Array();
+                    var submit;
+                    var submit_O;
+                    var targettt = new Array();
+                    var bezTween = new Array(),checkingTween,checkingTween1,downStream = new Array(),downStream1 = new Array(),checkingDownStream;
+                    var naam=0,levelCompletee=0;
+                    var uKnow,bestScore=false;
+                    var isOrganic=false,isPaper=false,isMetal=false,isGlass=false,isPlastic=false;
+                    var paused=false;
+
+                    ////
+                  
+                    
+
+                            
+                          
+
+
+                    ///yaweer's variable
+                    var startButtonContainer;
+                    var retryContainer;
+                    var level_score=0;
+                    var TweenIsHappening=false;
+                    var BlocksLeft;
+                    var c;
+                    var update;
+                    var context;
+                    var canvas;
+                    var stage ;
+                    var W,H;
+                    var bg1;
+                    var angle=0;
+                    var scaleFactor=1;
+                    var purpleAdded=false;
+                    var init=false;
+                    var level=1;
+                    var levell;
+                    var target=100;
+                    var submitContainer;
+                    var targett;
+                    var collectedd;
+                    var retry;
+                    var retry_O;
+                    var helpButton,helpButton_O,pauseButton,pauseButton_O;
+                    var gamePaused,continueButton,continueButton_O,restartButton,restartButton_O;
+                    var bin,shadow,sadbin;
+                    var waste,collsion;
+                    var scoree;
+                    var introText,tex,tex1;
+                    var gotosubmit=false;
+                    var paperBin,organicBin,metalBin,glassBin,plasticBin;
+                    var sadPaperBin,sadOrganicBin,sadMetalBin,sadGlassBin,sadPlasticBin;
+                    var openBestScore=false;
+                    var bini = new Array();
+                    var sadBini = new Array();
+                    var bin2 = new Array();
+                    var bin3 = new Array();
+
+                    var shadow1,shadow3;
+                    var gameC;
+                    var previousScore;
+                    //loading bar variables start
+                                        var filesloaded = 0;
+                    var loading1;
+                    var right;
+                    var loadProgressLabel;
+                    var loadProgressLabel1;
+                    var loadingBarContainer;
+                    var loading;
+                    var loadingBar;
+                    var loading_progess;
+                    var loading_screen;
+                    var loadingBarHeight;
+                    var loadingBarWidth;
+                    var LoadingBarColor;
+                    //loading bar variables end
+
+
+
+                    //////GameState and logic varibles//////
+                    var score=0,number=0,collected=0;
+                     var sound_1 = new Howl({
+                      urls: ['lapping_water_gentle_03_60_loop.mp3', 'lapping_water_gentle_03_60_loop.ogg']
+                    }).play(true);
+                    var sound_2=new Howl({
+                      urls:['morph_whoosh_22.mp3','morph_whoosh_22.ogg']
+                    });
+                    var sound_3=new Howl({
+                    urls:['doowip01.mp3','doowip01.ogg']
+                      
+                    });
+                    var sound_4=new Howl({
+                    urls:['ahoog02.mp3','ahoog02.ogg']
+                      
+                    });
+                   
+
+                    
+        
+       
+                 
+
+                ////////yawer variable's end
+
+
+
+                    window.addEventListener('resize',
+                        function(evt) {
+                        scaleDynamically(evt);
+                            },
+                         false);
+
+                    function scaleDynamically(e){
+                        scaleFactor= Math.min(window.innerWidth/W, window.innerHeight/H);
+                        if(scaleFactor>1){
+                            scaleFactor=1;
+                        }
+                        canvas.width = W*scaleFactor;
+                        canvas.height = H*scaleFactor;
+                        context = canvas.getContext( '2d' );
+                        stage.scaleX=stage.scaleY=scaleFactor;
+                       
+                        }
+
+                    var queue = new createjs.LoadQueue();
+
+                    queue.addEventListener("fileload", handleFileLoad);
+                    queue.addEventListener("complete", handleComplete);
+                    ///mainMenu Buttons
+                    queue.loadFile({id:"loading_screen",src:"images/loading.png"});
+                    queue.loadFile({id:"startButton",src:"images/startButton.png"});
+                    queue.loadFile({id:"startButton_O",src:"images/startButton_O.png"});
+                    queue.loadFile({id:"mainMenu",src:"images/mainMenu.png"});
+                    queue.loadFile({id:"play",src:"images/playButton.png"});
+                    queue.loadFile({id:"play_O",src:"images/playButton_O.png"});
+                    queue.loadFile({id:"howToPlay",src:"images/howToPlayButton.png"});
+                    queue.loadFile({id:"howToPlay_O",src:"images/howToPlayButton_O.png"});
+                    queue.loadFile({id:"scoreBoards",src:"images/scoreButton.png"});
+                    queue.loadFile({id:"scoreBoards_O",src:"images/scoreButton_O.png"});
+                    queue.loadFile({id:"intro",src:"images/intro.png"});
+                    queue.loadFile({id:"gamePaused",src:"images/gamePaused.png"});
+                    queue.loadFile({id:"paperBin",src:"images/paper/bin.png"});
+                    queue.loadFile({id:"sadPaperBin",src:"images/paper/sadBin.png"});
+                    queue.loadFile({id:"organicBin",src:"images/organic/bin.png"});
+                    queue.loadFile({id:"sadOrganicBin",src:"images/organic/sadbin.png"});
+                    queue.loadFile({id:"metalBin",src:"images/metal/bin.png"});
+                    queue.loadFile({id:"sadMetalBin",src:"images/metal/sadBin.png"});
+                    queue.loadFile({id:"glassBin",src:"images/glass/bin.png"});
+                    queue.loadFile({id:"sadGlassBin",src:"images/glass/sadBin.png"});
+                    queue.loadFile({id:"plasticBin",src:"images/plastic/bin.png"});
+                    queue.loadFile({id:"sadPlasticBin",src:"images/plastic/sadBin.png"});
+                    queue.loadFile({id:"shadow",src:"images/shadow.png"});
+                    ////levelMap Buttons etc
+                   
+                    //queue.loadFile({id:"board",src:"images/board.png"});
+                    queue.loadFile({id:"submit",src:"images/submit.png"});
+                    queue.loadFile({id:"submit_O",src:"images/submit_O.png"});
+                    queue.loadFile({id:"retry",src:"images/retry.png"});
+                    queue.loadFile({id:"retry_O",src:"images/retry_O.png"});
+                    queue.loadFile({id:"round",src:"images/round.png"});
+                    queue.loadFile({id:"helpButton",src:"images/helpButton.png"});
+                    queue.loadFile({id:"helpButton_O",src:"images/helpButton_O.png"});
+                    queue.loadFile({id:"pauseButton",src:"images/pauseButton.png"});
+                    queue.loadFile({id:"pauseButton_O",src:"images/pauseButton_O.png"});
+
+                    queue.loadFile({id:"continueButton",src:"images/continueButton.png"});
+                    queue.loadFile({id:"continueButton_O",src:"images/continueButton_O.png"});
+                    queue.loadFile({id:"restartButton",src:"images/restartButton.png"});
+                    queue.loadFile({id:"restartButton_O",src:"images/restartButton_O.png"});
+                    queue.loadFile({id:"shade",src:"images/shade.png"});
+                    ///yawer loading
+
+                    /*queue.loadFile({id:"bg1", src:"yeah.jpg"});
+                    for(var i=5;i<10;i++){
+                    queue.loadFile({id:"shape"+i, src:"shape"+i+".png"});
+                    }
+                    */
+                    ////yawer loading end
+                    //animals
+                  
+                    //gamePage
+                    //queue.loadFile({id:"bg1",src:"images/gamePage.png"});
+
+
+                    ///howToPlayScreen howToPlay>>HTPscreen
+                    queue.loadFile({id:"howToPlayScreen",src:"images/howToPlayScreen.png"});
+                    queue.loadFile({id:"backButton",src:"images/backButton.png"});
+                    queue.loadFile({id:"backButton_O",src:"images/backButton_O.png"});
+                    //queue.loadFile({id:"backButton_O",src:"images/backButton_O.png"});
+                    //scoreBoard screen
+                    queue.loadFile({id:"scoreBoardScreen",src:"images/scoreScreen.png"});
+                    //forest with pond and mud
+                    //popups
+                    queue.loadFile({id:"completePopUp",src:"images/gameOverPopup.png"});
+                    queue.loadFile({id:"mainMenuButton",src:"images/mainMenuButton.png"});
+                    queue.loadFile({id:"mainMenuButton_O",src:"images/mainMenuButton_O.png"});
+
+                    queue.loadFile({id:"nextPopUp",src:"images/popUpNextLevel.png"});
+                    queue.loadFile({id:"next",src:"images/next_Icon.png"});
+                    queue.loadFile({id:"next_O",src:"images/next_Icon_O.png"});
+                    for(var i=1;i<=24;i++){
+                        queue.loadFile({id:"waste"+i,src:"images/"+i+".png"});
+                        
+
+                    }
+                    
+
+
+
+
+
+
+                    var canvas = document.createElement( navigator.isCocoonJS ? "screencanvas" : "canvas");
+                      W=638;
+                      H=550;
+                      canvas.width = W;
+                      canvas.height = H;
+                      var context = canvas.getContext("2d");
+                      document.body.appendChild(canvas);
+                      //yaweer
+                      c=createjs;
+                      //yawerr
+                      stage = new createjs.Stage(canvas);
+                      //canvas.cursor=$('.custom');
+                      stage.enableMouseOver();
+                      //var trigger =stage.getObjectUnderPoint(stage.mouseX, stage.mouseY); 
+                      var namee = new Array();
+                      var dataa = new Array();
+
+
+                      createjs.Touch.enable(stage);
+                      ///yawer mouse over
+
+                      stage.enableMouseOver();
+                      c.Touch.enable(stage);
+                      $("canvas").on("mousedown", function () {
+                        $(this).addClass("mouseDown");
+                    }).on("mouseup", function () {
+                        $(this).removeClass("mouseDown");
+                    });
+                      ///
+                      
+                      createjs.Ticker.setInterval(40);
+                      createjs.Ticker.addEventListener("tick", tick);
+                      //stage.autoClear = true;
+                      scaleDynamically(null);
+                       
+
+                      stage.addEventListener("click", stagePressHandler);
+                      //yawers code
+                        
+                        ///yawer end
+
+                      
+
+                     function handleFileLoad()
+                        {
+
+                                        filesloaded++;
+                                        
+                                        if(filesloaded==1)
+                                            {
+                                                 loading1 = new createjs.Bitmap(queue.getResult("loading_screen"));
+                                                 stage.addChild(loading1);   
+                                            } 
+                        }
+
+                        function handleComplete(){
+                        stage.removeChild(loading1);
+                        ///mainMenu Bitmaps
+                        //yawer start
+                        bg1= new c.Bitmap(queue.getResult("bg1"));
+                        //bg1.scaleX=bg1.scaleY=1;
+                        
+                        //stage.addChild(bg1);
+                        //renderBlocks();
+                        //will reduce from 3 3 
+                        //dfs(3, 3,7,x[3][3]);
+                        //will push forward.
+                        //shapecopy[.addEventListener("mousedown", function(evt) { 
+         
+                        // cleanArray();
+        
+                        init=false; 
+               
+                        //yawer end
+                        mainMenu = new createjs.Bitmap(queue.getResult("mainMenu"));
+                        playButton = new createjs.Bitmap(queue.getResult("play"));
+                        playButton_O = new createjs.Bitmap(queue.getResult("play_O"));
+                        howToPlayButton = new createjs.Bitmap(queue.getResult("howToPlay"));
+                        howToPlayButton_O = new createjs.Bitmap(queue.getResult("howToPlay_O"));
+                        startButton = new createjs.Bitmap(queue.getResult("startButton"));
+                        startButton_O = new createjs.Bitmap(queue.getResult("startButton_O"));
+                        scoreBoardButtons = new createjs.Bitmap(queue.getResult("scoreBoards"));
+                        scoreBoardButtons_O = new createjs.Bitmap(queue.getResult("scoreBoards_O"));
+                        backButton = new createjs.Bitmap(queue.getResult("backButton"));
+                        backButton_O = new createjs.Bitmap(queue.getResult("backButton_O"));
+                        nextIcon = new createjs.Bitmap(queue.getResult("next"));
+                        nextIcon_O = new createjs.Bitmap(queue.getResult("next_O"));
+                        intro = new createjs.Bitmap(queue.getResult("intro"));
+                        helpButton = new createjs.Bitmap(queue.getResult("helpButton"));
+                        helpButton_O = new createjs.Bitmap(queue.getResult("helpButton_O"));
+                        pauseButton = new createjs.Bitmap(queue.getResult("pauseButton"));
+                        pauseButton_O = new createjs.Bitmap(queue.getResult("pauseButton_O"));
+                        gamePaused = new createjs.Bitmap(queue.getResult("gamePaused"));
+                        pauseButton_O = new createjs.Bitmap(queue.getResult("pauseButton_O"));
+                        continueButton = new createjs.Bitmap(queue.getResult("continueButton"));
+                        continueButton_O = new createjs.Bitmap(queue.getResult("continueButton_O"));
+                        restartButton = new createjs.Bitmap(queue.getResult("restartButton"));
+                        restartButton_O = new createjs.Bitmap(queue.getResult("restartButton_O"));
+                        shade = new createjs.Bitmap(queue.getResult("shade"));
+                        shadow = new createjs.Bitmap(queue.getResult("shadow"));
+
+                       /* paperBin = new createjs.Bitmap(queue.getResult("paperBin"));
+                        organicBin = new createjs.Bitmap(queue.getResult("organicBin"));
+                        metalBin = new createjs.Bitmap(queue.getResult("metalBin"));
+                        glassBin = new createjs.Bitmap(queue.getResult("glassBin"));
+                        plasticBin = new createjs.Bitmap(queue.getResult("plasticBin"));
+                        *///
+
+                        bini[1] = new createjs.Bitmap(queue.getResult("paperBin"));
+                        bini[2] = new createjs.Bitmap(queue.getResult("plasticBin"));
+                        bini[3] = new createjs.Bitmap(queue.getResult("organicBin"));
+                        bini[4] = new createjs.Bitmap(queue.getResult("metalBin"));
+                        bini[5] = new createjs.Bitmap(queue.getResult("glassBin"));
+                        
+                        /*sad bins
+                        sadPaperBin = new createjs.Bitmap(queue.getResult("sadPaperBin"));
+                        sadPlasticBin = new createjs.Bitmap(queue.getResult("sadPlasticBin"));
+                        sadOrganicBin = new createjs.Bitmap(queue.getResult("sadOrganicBin"));
+                        sadMetalBin = new createjs.Bitmap(queue.getResult("sadMetalBin"));
+                        sadGlassBin = new createjs.Bitmap(queue.getResult("sadGlassBin"));
+                        
+                        //*/
+                        sadBini[1] = new createjs.Bitmap(queue.getResult("sadPaperBin"));
+                        sadBini[2] = new createjs.Bitmap(queue.getResult("sadPlasticBin"));
+                        sadBini[3] = new createjs.Bitmap(queue.getResult("sadOrganicBin"));
+                        sadBini[4] = new createjs.Bitmap(queue.getResult("sadMetalBin"));
+                        sadBini[5] = new createjs.Bitmap(queue.getResult("sadGlassBin"));
+                        //
+                        continueButtonContainer = new createjs.Container();
+                        continueButtonContainer.cursor="pointer";
+                        setContinueBAlpha();
+                        continueButtonContainer.addChild(continueButton,continueButton_O);
+
+                        //
+                        restartButtonContainer = new createjs.Container();
+                        restartButtonContainer.cursor="pointer";
+                        setRestartBAlpha();
+                        restartButtonContainer.addChild(restartButton,restartButton_O);
+                        //
+
+                        helpButtonConatainer = new createjs.Container();
+                        helpButtonConatainer.cursor="pointer";
+                        setHBAlpha();
+                        helpButtonConatainer.addChild(helpButton,helpButton_O);
+                        //
+                        pauseButtonContainer = new createjs.Container();
+                        pauseButtonContainer.cursor="pointer";
+                        setPBAlpha();
+                        pauseButtonContainer.addChild(pauseButton,pauseButton_O);
+                        //next Icon container
+                        nextIconContainer = new createjs.Container();
+                        nextIconContainer.cursor="pointer";
+                        setIconAlpha();
+                        nextIconContainer.addChild(nextIcon,nextIcon_O);
+                        ////levelMap bitmaps etc play>levelMap
+                        levelMap = new createjs.Bitmap(queue.getResult("levelMap"));
+                        //board = new createjs.Bitmap(queue.getResult("board"));
+                        levelSelect = new createjs.Bitmap(queue.getResult("levelSelect"));
+                        levelSelect.cursor="pointer";
+                        //play containers
+                       // dropDownContainer = new createjs.Container();
+                        playButtonContainer = new createjs.Container();
+                        playButtonContainer.cursor="pointer";
+                        setAlpha();
+                        playButtonContainer.addChild(playButton,playButton_O);
+                        /////htp container
+                        htpButtonContainer = new createjs.Container();
+                        htpButtonContainer.cursor="pointer";
+                        setHTPAlpha();
+                        htpButtonContainer.addChild(howToPlayButton,howToPlayButton_O);
+                        //start button container
+                        startButtonContainer = new createjs.Container();
+                        startButtonContainer.cursor="pointer";
+                        setStartBAlpha();
+                        startButtonContainer.addChild(startButton,startButton_O);
+                        ///scoreboard container
+                        scoreBoardButtonContainer = new createjs.Container();
+                        scoreBoardButtonContainer.cursor="pointer";
+                        setSBAlpha();
+                        scoreBoardButtonContainer.addChild(scoreBoardButtons,scoreBoardButtons_O);
+                        ////back button container
+                        backButtonContainer = new createjs.Container();
+                        backButtonContainer.cursor="pointer";
+                        setBBAlpha();
+                        backButtonContainer.addChild(backButton,backButton_O);
+                        
+                        ////
+
+                        ///howToPlayScreen
+                        htp_screen = new createjs.Bitmap(queue.getResult("howToPlayScreen"));
+                        //scoreBoardScreen
+                        scoreBoard = new createjs.Bitmap(queue.getResult("scoreBoardScreen"));
+                        round = new createjs.Bitmap(queue.getResult("round"));
+                       
+                        //
+                        //gamePage = new createjs.Bitmap(queue.getResult("gamePage"));
+                        //popups
+                        gameCompletePopUp = new createjs.Bitmap(queue.getResult("completePopUp"));
+                        mainMenuButton = new createjs.Bitmap(queue.getResult("mainMenuButton"));
+                        mainMenuButton_O = new createjs.Bitmap(queue.getResult("mainMenuButton_O"));
+                        //
+                        retry = new createjs.Bitmap(queue.getResult("retry"));
+                        retry_O = new createjs.Bitmap(queue.getResult("retry_O"));
+                        retryContainer = new createjs.Container();
+                        retryContainer.cursor="pointer";
+                        setRetryAlpha();
+                        retryContainer.addChild(retry,retry_O);
+
+
+                        submit = new createjs.Bitmap(queue.getResult("submit"));
+                        submit_O = new createjs.Bitmap(queue.getResult("submit_O"));
+                        submitContainer = new createjs.Container();
+                        submitContainer.cursor="pointer";
+                        setSubmitAlpha();
+                        submitContainer.addChild(submit,submit_O);
+                        ////main menu button
+                        mainMenu_container = new createjs.Container();
+                        mainMenu_container.cursor="pointer";
+                        setMMAlpha();
+                        mainMenu_container.addChild(mainMenuButton,mainMenuButton_O);
+
+                        levelCompletePopUp = new createjs.Bitmap(queue.getResult("nextPopUp"));
+
+
+
+                        cordinates_handler();
+                        // play button listeners
+                        playButtonContainer.addEventListener("click",onPlay);
+                        
+                        playButtonContainer.addEventListener("rollover",onPlayRoll);
+                        playButtonContainer.addEventListener("rollout",onPlayRollOut);
+                        //
+                        //htp listeners
+                        htpButtonContainer.addEventListener("click",onHTP);
+                        htpButtonContainer.addEventListener("rollover",onHTPRoll);
+                        htpButtonContainer.addEventListener("rollout",onHTPRollOut);
+                        //
+                        startButtonContainer.addEventListener("click",onStart);
+                        startButtonContainer.addEventListener("rollover",onStartBRoll);
+                        startButtonContainer.addEventListener("rollout",onStartBRollOut);
+                        //back button listeners
+                        backButtonContainer.addEventListener("click",onBack);
+                        backButtonContainer.addEventListener("rollover",onBBRoll);
+                        backButtonContainer.addEventListener("rollout",onBBRollOut);
+                        //score board button listeners
+                        scoreBoardButtonContainer.addEventListener("click",onScore);
+                        scoreBoardButtonContainer.addEventListener("rollover",onSBRoll);
+                        scoreBoardButtonContainer.addEventListener("rollout",onSBRollOut);
+                        //next icon container listeners
+                        nextIconContainer.addEventListener("click",onNext);
+                        nextIconContainer.addEventListener("rollover",onNRoll);
+                        nextIconContainer.addEventListener("rollout",onNRollOut);
+                        //shapecopy[ii][jj].addEventListener("click",block_onPress);
+                        //main menu container listener
+                        mainMenu_container.addEventListener("click",onMain);
+                        mainMenu_container.addEventListener("rollover",onMRoll);
+                        mainMenu_container.addEventListener("rollout",onMRollOut);
+                        //submitContainer
+
+                        submitContainer.addEventListener("click",onSubmitt);
+                        submitContainer.addEventListener("rollover",onSubmittRoll);
+                        submitContainer.addEventListener("rollout",onSubmittRollOut);
+                        // retry container
+
+                        retryContainer.addEventListener("click",onRetry);
+                        retryContainer.addEventListener("rollover",onRetryRoll);
+                        retryContainer.addEventListener("rollout",onRetryRollOut);
+                        //
+                        pauseButtonContainer.addEventListener("click",onPause);
+                        pauseButtonContainer.addEventListener("rollover",onPauseBRoll);
+                        pauseButtonContainer.addEventListener("rollout",onPauseBRollOut);
+                        //
+
+                        helpButtonConatainer.addEventListener("click",onHelpp);
+                        helpButtonConatainer.addEventListener("rollover",onHelpBRoll);
+                        helpButtonConatainer.addEventListener("rollout",onHelpBRollOut);
+                        //
+                        continueButtonContainer.addEventListener("click",onContine);
+                        continueButtonContainer.addEventListener("rollover",onContinueBRoll);
+                        continueButtonContainer.addEventListener("rollout",onContinueBRollOut);
+                        //
+                        restartButtonContainer.addEventListener("click",onRestart);
+                        restartButtonContainer.addEventListener("rollover",onRestartBRoll);
+                        restartButtonContainer.addEventListener("rollout",onRestartBRollOut);
+
+                       // submit.addEventListener("click",onSubmitButton);
+
+
+
+
+                     
+                          //  document.getElementById("EnterQuestionDiv").onclick = function () {alert("hello world");};
+
+
+                        viewMain();
+
+                        }
+
+                        function cordinates_handler(){
+                            //play.x=239;//322.5
+                            //playButton.y=225;//296.5
+                            playButtonContainer.x=370;
+                            playButtonContainer.y=194;
+                            //playButton_O.x=239;//322.5
+                            //playButton_O.y=225;//296.5
+                            gamePaused.x=147;
+                            gamePaused.y=162;
+
+                            continueButtonContainer.x=223;
+                            continueButtonContainer.y=225;
+
+                            restartButtonContainer.x=173;
+                            restartButtonContainer.y=304;
+
+
+                       
+                            
+                            //howToPlayButton.x=246;
+                            //howToPlayButton.y=280;
+                            
+                            //scoreBoardButton.x=246;
+                            //scoreBoardButton.y=330;
+                            //
+                            backButtonContainer.x=30;
+                            backButtonContainer.y=478;
+                            //
+                            nextIconContainer.x=515;
+                            nextIconContainer.y=185;
+                            //
+                            levelCompletePopUp.x=0;
+                            //
+                          //  submitContainer.x=380;
+                          //  submitContainer.y=220;
+                            //
+
+                            //
+                            retryContainer.x=530;
+                            retryContainer.y=130;
+
+                            pauseButtonContainer.x=2;
+                            pauseButtonContainer.y=5;
+
+                            helpButtonConatainer.x=50;
+                            helpButtonConatainer.y=5;
+
+
+                            startButtonContainer.x=200;
+                            startButtonContainer.y=225;
+
+                            htpButtonContainer.x=163;
+                            htpButtonContainer.y=301;
+
+                            scoreBoardButtonContainer.x=320;
+                            scoreBoardButtonContainer.y=301;
+
+                            levelCompletePopUp.x=20;
+                            levelCompletePopUp.y=80;
+
+
+                        }
+                      
+                   
+                    
+
+        
+      
+
+                        function viewMain(){
+
+                            stage.removeAllChildren();
+                            TweenMax.killAll();
+                            level=1;
+                            
+                            stage.addChild(mainMenu,startButtonContainer,htpButtonContainer,scoreBoardButtonContainer);
+                            
+                        }
+                        //
+                        function renderLevel(){
+
+                           
+                            //for(var i=1;i<=3;i++){
+                               /* if(level==1)
+                                    var i =  Math.floor(Math.random() * (19 - 7 + 1)) + 7;
+                                else if(level==2)
+                                    var i =  Math.floor(Math.random() * (18 - 14 + 1)) + 14;
+                                else if(level==3)
+                                    var i =  Math.floor(Math.random() * (9 - 1+ 1)) + 1;
+                                else if(level==4)
+                                    var i =  Math.floor(Math.random() * (24 - 19 + 1)) + 19;
+                                else if(level==5)
+                                    var i =  Math.floor(Math.random() * (21 - 17 + 1)) + 17;
+                                else if(level==6)
+                                    var i =  Math.floor(Math.random() * (18 - 7 + 1)) + 7;
+                                else if(level==7)
+                                    var i =  Math.floor(Math.random() * (21 - 14 + 1)) + 14;
+                                else if(level==8)
+                                    var i =  Math.floor(Math.random() * (16 - 1 + 1)) + 1;
+                                else if(level==9)
+                                    var i =  Math.floor(Math.random() * (24 - 1 + 1)) + 1;
+                                else if(level==10)
+                                    var i =  Math.floor(Math.random() * (24 - 8 + 1)) + 8;
+                                  */
+                               // var i =  Math.floor(Math.random() * (24 - 1 + 1)) + 1;
+                               if(level==1)
+                                    var i =  Math.floor(Math.random() * (14 - 8 + 1)) + 8;
+                                else if(level==2)
+                                    var i =  Math.floor(Math.random() * (17 - 15 + 1)) + 15;
+                                else if(level==3)
+                                    var i =  Math.floor(Math.random() * (7 - 1+ 1)) + 1;
+                                else if(level==4)
+                                    var i =  Math.floor(Math.random() * (24 - 21 + 1)) + 21;
+                                else if(level==5)
+                                    var i =  Math.floor(Math.random() * (20 - 18 + 1)) + 18;
+                                else if(level==6)
+                                       {
+                                    var x =  Math.floor(Math.random() * (21 - 1 + 1)) + 1;
+                                      if(x<10)
+                                         var i =  Math.floor(Math.random() * (17 - 15+ 1)) + 15;
+                                      else
+                                         var i =  Math.floor(Math.random() * (14 - 8+ 1)) + 8;
+                                  }
+                                else if(level==7)
+                                    var i =  Math.floor(Math.random() * (20 - 15 + 1)) + 15;
+                                else if(level==8)
+                                    var i =  Math.floor(Math.random() * (14 - 1 + 1)) + 1;
+                                else if(level==9)
+                                  {
+                                    var x =  Math.floor(Math.random() * (21 - 1 + 1)) + 1;
+                                      if(x<10)
+                                         var i =  Math.floor(Math.random() * (7 - 1+ 1)) + 1;
+                                      else
+                                         var i =  Math.floor(Math.random() * (24 - 18+ 1)) + 18;
+                                  }
+                                else if(level==10)
+                                    {
+                                      var x =  Math.floor(Math.random() * (21 - 1 + 1)) + 1;
+                                      if(x<7)
+                                         var i =  Math.floor(Math.random() * (14 - 8 + 1)) + 8;
+                                      else if(x<14)
+                                         var i =  Math.floor(Math.random() * (17 - 15+ 1)) + 15;
+                                       else
+                                        var i =  Math.floor(Math.random() * (24 - 21+ 1)) + 21;
+                                    }
+                                waste = new createjs.Bitmap(queue.getResult("waste"+i));
+                               /* if(i<=7)
+                                    waste.isOrganic = true;
+                                else if(i>7 && i<=14)
+                                   waste.isPaper = true;
+                                else if(i>14 && i<=17)
+                                    waste.isPlastic = true;
+                                else if(i>17 && i<=20)
+                                    waste.isGlass = true; 
+                                else if(i>20 && i<=24)
+                                    waste.isMetal = true;
+                                  */
+                               // waste.name = "waste"+i;
+                                if(i<=7)
+                                    waste.type=3;
+                                else if(i>7 && i<=14)
+                                    waste.type=1;
+                                else if(i>14 && i<=17)
+                                    waste.type=2;
+                                else if(i>17 && i<=20)
+                                    waste.type=5;
+                                else if(i>20 && i<=24)
+                                    waste.type=4;
+                                stage.addChild(waste);
+
+                                
+                            
+                            
+                            waste.on("mousedown", function(evt) {
+                              if(this.alpha==0.2){
+                                  this.alpha=0.7;
+                                   }
+                                                        
+                              TweenMax.killTweensOf(this);
+                              this.parent.addChild(this);
+                              if(level<=5){
+                                    if(this.type===level && bin==sadBini[level]){
+                                          //stage.removeChild(sadPaperBin);
+                                         // sadPaperBin.alpha=0;
+                                         // paperBin.alpha=1;
+                                       //  sound_3.stop();
+                                         
+                                         bin.alpha=0;
+                                         bin=bini[level];
+                                         bin.alpha=1;
+                                        }
+                                   
+                                    else if(this.type!=level){
+                                     // sound_4.stop();
+                                      sound_3.play();
+                                      if(bin==sadBini[level])
+                                      {
+
+                                      }
+                                      else{
+                                         //paperBin.alpha=0;
+                                         bin.alpha=0;
+                                         bin=sadBini[level];
+                                        // sadPaperBin.alpha=1;
+                                         bin.alpha=1;
+                                         bin=sadBini[level];
+                                         bin.x=265;
+                                         bin.y=280;
+                                         stage.addChild(bin);
+                                         //bin.zIndex=100;
+                                         }
+                                     }
+                            }
+                            else if(level==6){
+                              if(this.type===1){
+                                    if(bin==sadBini[1])
+                                        {
+                                          //stage.removeChild(sadPaperBin);
+                                         // sadPaperBin.alpha=0;
+                                         // paperBin.alpha=1;
+
+                                         bin.alpha=0;
+                                         bin=bini[1];
+                                         bin.alpha=1;
+                                        }
+                                  
+
+
+                            }
+                            else if(this.type===2){
+
+                               if(bin2==sadBini[2])
+                                        {
+                                          //stage.removeChild(sadPaperBin);
+                                         // sadPaperBin.alpha=0;
+                                         // paperBin.alpha=1;
+
+                                         bin2.alpha=0;
+                                         bin2=bini[2];
+                                         bin2.alpha=1;
+                                        }
+                                  
+                                     
+                          }
+                           else{
+                            sound_3.play();
+                                      
+                                         //paperBin.alpha=0;
+                                         bin.alpha=0;
+                                         bin2.alpha=0;
+                                         bin=sadBini[1];
+                                         bin2=sadBini[2];
+                                        // sadPaperBin.alpha=1;
+                                         bin.alpha=1;
+                                         bin2.alpha=1;
+                                         bin=sadBini[1];
+                                         bin2=sadBini[2];
+                                         bin.x=120;
+                                         bin.y=280;
+                                         bin2.x=420;
+                                         bin2.y=280;
+                                         stage.addChild(bin,bin2);
+                                          }
+                                      }
+                             else if(level==7){
+                              if(this.type===2){
+                                    if(bin==sadBini[2])
+                                        {
+                                          //stage.removeChild(sadPaperBin);
+                                         // sadPaperBin.alpha=0;
+                                         // paperBin.alpha=1;
+
+                                         bin.alpha=0;
+                                         bin=bini[2];
+                                         bin.alpha=1;
+                                        }
+                                  
+
+
+                            }
+                            else if(this.type===5){
+
+                               if(bin2==sadBini[5])
+                                        {
+                                          //stage.removeChild(sadPaperBin);
+                                         // sadPaperBin.alpha=0;
+                                         // paperBin.alpha=1;
+
+                                         bin2.alpha=0;
+                                         bin2=bini[5];
+                                         bin2.alpha=1;
+                                        }
+                                  
+                                     
+                          }
+                           else{
+                                      sound_3.play();
+                                         //paperBin.alpha=0;
+                                         bin.alpha=0;
+                                         bin2.alpha=0;
+                                         bin=sadBini[2];
+                                         bin2=sadBini[5];
+                                        // sadPaperBin.alpha=1;
+                                         bin.alpha=1;
+                                         bin2.alpha=1;
+                                         bin=sadBini[2];
+                                         bin2=sadBini[5];
+                                         bin.x=120;
+                                         bin.y=280;
+                                         bin2.x=420;
+                                         bin2.y=280;
+                                         stage.addChild(bin,bin2);
+                                          }
+                                      }
+                               else if(level==8){
+                              if(this.type===1){
+                                    if(bin==sadBini[1])
+                                        {
+                                          //stage.removeChild(sadPaperBin);
+                                         // sadPaperBin.alpha=0;
+                                         // paperBin.alpha=1;
+
+                                         bin.alpha=0;
+                                         bin=bini[1];
+                                         bin.alpha=1;
+                                        }
+                                  
+
+
+                            }
+                            else if(this.type===3){
+
+                               if(bin2==sadBini[3])
+                                        {
+                                          //stage.removeChild(sadPaperBin);
+                                         // sadPaperBin.alpha=0;
+                                         // paperBin.alpha=1;
+
+                                         bin2.alpha=0;
+                                         bin2=bini[3];
+                                         bin2.alpha=1;
+                                        }
+                                  
+                                     
+                          }
+                          //else if(this.type===)
+                           else{
+                                      sound_3.play();
+                                         //paperBin.alpha=0;
+                                         bin.alpha=0;
+                                         bin2.alpha=0;
+                                         bin=sadBini[1];
+                                         bin2=sadBini[3];
+                                        // sadPaperBin.alpha=1;
+                                         bin.alpha=1;
+                                         bin2.alpha=1;
+                                         bin=sadBini[1];
+                                         bin2=sadBini[3];
+                                         bin.x=120;
+                                         bin.y=280;
+                                         bin2.x=420;
+                                         bin2.y=280;
+                                         stage.addChild(bin,bin2);
+                                          }
+                                      }
+                            else if(level==9){
+                              if(this.type===4){
+                                    if(bin==sadBini[4])
+                                        {
+                                          //stage.removeChild(sadPaperBin);
+                                         // sadPaperBin.alpha=0;
+                                         // paperBin.alpha=1;
+
+                                         bin.alpha=0;
+                                         bin=bini[4];
+                                         bin.alpha=1;
+                                        }
+                                  
+
+
+                            }
+                            else if(this.type===3){
+
+                               if(bin2==sadBini[3])
+                                        {
+                                          //stage.removeChild(sadPaperBin);
+                                         // sadPaperBin.alpha=0;
+                                         // paperBin.alpha=1;
+
+                                         bin2.alpha=0;
+                                         bin2=bini[3];
+                                         bin2.alpha=1;
+                                        }
+                                  
+                                     
+                          }
+                          else if(this.type===5){
+
+                               if(bin3==sadBini[5])
+                                        {
+                                          //stage.removeChild(sadPaperBin);
+                                         // sadPaperBin.alpha=0;
+                                         // paperBin.alpha=1;
+
+                                         bin3.alpha=0;
+                                         bin3=bini[5];
+                                         bin3.alpha=1;
+                                        }
+                                  
+                                     
+                          }
+                           else{
+                                      sound_3.play();
+                                         //paperBin.alpha=0;
+                                         bin.alpha=0;
+                                         bin2.alpha=0;
+                                         bin3.alpha=0;
+                                         bin=sadBini[4];
+                                         bin2=sadBini[3];
+                                         bin3=sadBini[5];
+                                        // sadPaperBin.alpha=1;
+                                         bin.alpha=1;
+                                         bin2.alpha=1;
+                                         bin3.alpha=1;
+                                         bin=sadBini[4];
+                                         bin2=sadBini[3];
+                                         bin3=sadBini[5];
+                                         bin.x=90;
+                                         bin.y=280;
+                                         bin2.x=440;
+                                         bin2.y=280;
+                                         bin3.x=265;
+                                         bin3.y=280;
+                                         stage.addChild(bin,bin2,bin3);
+                                          }
+                                      }
+
+                              else if(level==10){
+                              if(this.type===1){
+                                    if(bin==sadBini[1])
+                                        {
+                                          //stage.removeChild(sadPaperBin);
+                                         // sadPaperBin.alpha=0;
+                                         // paperBin.alpha=1;
+
+                                         bin.alpha=0;
+                                         bin=bini[1];
+                                         bin.alpha=1;
+                                        }
+                                  
+
+
+                            }
+                            else if(this.type===4){
+
+                               if(bin2==sadBini[4])
+                                        {
+                                          //stage.removeChild(sadPaperBin);
+                                         // sadPaperBin.alpha=0;
+                                         // paperBin.alpha=1;
+
+                                         bin2.alpha=0;
+                                         bin2=bini[4];
+                                         bin2.alpha=1;
+                                        }
+                                  
+                                     
+                          }
+                          else if(this.type===2){
+
+                               if(bin3==sadBini[2])
+                                        {
+                                          //stage.removeChild(sadPaperBin);
+                                         // sadPaperBin.alpha=0;
+                                         // paperBin.alpha=1;
+
+                                         bin3.alpha=0;
+                                         bin3=bini[2];
+                                         bin3.alpha=1;
+                                        }
+                                  
+                                     
+                          }
+                           else{
+                                      sound_3.play();
+                                         //paperBin.alpha=0;
+                                         bin.alpha=0;
+                                         bin2.alpha=0;
+                                         bin3.alpha=0;
+                                         bin=sadBini[1];
+                                         bin2=sadBini[4];
+                                         bin3=sadBini[2];
+                                        // sadPaperBin.alpha=1;
+                                         bin.alpha=1;
+                                         bin2.alpha=1;
+                                         bin3.alpha=1;
+                                         bin=sadBini[1];
+                                         bin2=sadBini[4];
+                                         bin3=sadBini[2];
+                                         bin.x=90;
+                                         bin.y=280;
+                                         bin2.x=440;
+                                         bin2.y=280;
+                                         bin3.x=265;
+                                         bin3.y=280;
+                                         stage.addChild(bin,bin2,bin3);
+                                          }
+                                      }
+
+                                    
+                              
+                            });
+                           /* waste.on("pressmove", function(evt) {
+                            this.x = evt.stageX*1/scaleFactor+ this.offset.x;
+                            this.y = evt.stageY*1/scaleFactor+ this.offset.y;
+                           
+
+                            });
+                          */
+                            waste.on("pressup",function(evt){
+                                //TweenMax.fromTo(this,2,{x:this.x}, {y:500, onComplete:compl,ease:Linear.easeNone});
+                                if(level<=5){
+                                if(this.type==level)
+                                {
+                                  sound_4.play();
+                                  TweenMax.to(this,1,{ bezier: {values:[{x:300, y:200},{x:300, y:250}, {x:300,y:300}],},rotation:270,onComplete:completer,ease:Linear.easeNone});
+                                  //TweenMax.to(this,1,{x:bin.x+80,y:bin.y+10,onComplete:completer,ease:Linear.easeNone});
+                                }
+                                else
+                                  {
+                                    TweenMax.to(this,1,{ bezier: {values:[{x:250, y:100}, {x:800, y:100}]},rotation:270,ease:Linear.easeNone});
+                                  }
+                                }
+                                else if(level==6){
+                                    if(this.type==1)
+                                        {
+                                          sound_4.play();
+                                         TweenMax.to(this,1,{ bezier: {values:[{x:110, y:200},{x:110, y:250}, {x:110,y:300}],},rotation:270,onComplete:completer,ease:Linear.easeNone});
+                                       }
+                                    else if(this.type==2)
+                                    {
+                                      sound_4.play();
+                                          TweenMax.to(this,1,{ bezier: {values:[{x:400, y:200},{x:400, y:250}, {x:400,y:300}],},rotation:270,onComplete:completer,ease:Linear.easeNone});
+                                        }
+                                    else
+                                  {
+                                    TweenMax.to(this,1,{ bezier: {values:[{x:250, y:100}, {x:800, y:100}]},rotation:270,ease:Linear.easeNone});
+                                  }
+
+                                }
+                                else if(level==7){
+                                    if(this.type==2){
+                                      sound_4.play();
+                                          TweenMax.to(this,1,{ bezier: {values:[{x:110, y:200},{x:110, y:250}, {x:110,y:300}],},rotation:270,onComplete:completer,ease:Linear.easeNone});
+                                        }
+                                    else if(this.type==5){
+                                      sound_4.play();
+                                           TweenMax.to(this,1,{ bezier: {values:[{x:420, y:200},{x:420, y:250}, {x:420,y:300}],},rotation:270,onComplete:completer,ease:Linear.easeNone});
+                                         }
+                                    else
+                                  {
+                                    TweenMax.to(this,1,{ bezier: {values:[{x:250, y:100}, {x:800, y:100}]},rotation:270,ease:Linear.easeNone});
+                                  }
+
+                                }
+                                else if(level==8){
+                                    if(this.type==1){
+                                      sound_4.play();
+                                          TweenMax.to(this,1,{ bezier: {values:[{x:110, y:200},{x:110, y:250}, {x:110,y:300}],},rotation:270,onComplete:completer,ease:Linear.easeNone});
+                                        }
+                                    else if(this.type==3){
+                                      sound_4.play();
+                                          TweenMax.to(this,1,{ bezier: {values:[{x:420, y:200},{x:420, y:250}, {x:420,y:300}],},rotation:270,onComplete:completer,ease:Linear.easeNone});
+                                        }
+                                    else
+                                  {
+                                    TweenMax.to(this,1,{ bezier: {values:[{x:250, y:100}, {x:800, y:100}]},rotation:270,ease:Linear.easeNone});
+                                  }
+
+                                }
+                                else if(level==9){
+                                    if(this.type==4){
+                                      sound_4.play();
+                                           TweenMax.to(this,1,{ bezier: {values:[{x:85, y:200},{x:85, y:250}, {x:85,y:300}],},rotation:270,onComplete:completer,ease:Linear.easeNone});
+                                         }
+                                    else if(this.type==3){
+                                      sound_4.play();
+                                           TweenMax.to(this,1,{ bezier: {values:[{x:440, y:200},{x:440, y:250}, {x:440,y:300}],},rotation:270,onComplete:completer,ease:Linear.easeNone});
+                                         }
+                                    else if(this.type==5){
+                                      sound_4.play();
+                                           TweenMax.to(this,1,{ bezier: {values:[{x:265, y:200},{x:265, y:250}, {x:265,y:300}],},rotation:270,onComplete:completer,ease:Linear.easeNone});
+                                         }
+                                    else
+                                  {
+                                    TweenMax.to(this,1,{ bezier: {values:[{x:250, y:100}, {x:800, y:100}]},rotation:270,ease:Linear.easeNone});
+                                  }
+
+                                }
+                                else if(level==10){
+                                    if(this.type==1){
+                                      sound_4.play();
+                                           TweenMax.to(this,1,{ bezier: {values:[{x:85, y:200},{x:85, y:250}, {x:85,y:300}],},rotation:270,onComplete:completer,ease:Linear.easeNone});
+                                         }
+                                    else if(this.type==4){
+                                      sound_4.play();
+                                          TweenMax.to(this,1,{ bezier: {values:[{x:440, y:200},{x:440, y:250}, {x:440,y:300}],},rotation:270,onComplete:completer,ease:Linear.easeNone});
+                                        }
+                                    else if(this.type==2){
+                                      sound_4.play();
+                                          TweenMax.to(this,1,{ bezier: {values:[{x:265, y:200},{x:265, y:250}, {x:265,y:300}],},rotation:270,onComplete:completer,ease:Linear.easeNone});
+                                        }
+                                    else
+                                  {
+                                    TweenMax.to(this,1,{ bezier: {values:[{x:250, y:100}, {x:800, y:100}]},rotation:270,ease:Linear.easeNone});
+                                  }
+
+                                }
+                                  
+                                /*else if(bin2!=undefined)
+                                TweenMax.to(this,1,{x:bin2.x+50,y:bin2.y+60,onComplete:completer,ease:Linear.easeNone});
+                                */
+                                //else if(level>5 && level<=8)
+                                //TweenMax.to(this,1,{x:310,y:350,onComplete:completer,ease:Linear.easeNone});
+                                function completer(evt){
+
+                                   // if(scoree!=undefined)
+                                   stage.removeChild(this.target);
+                                  // if(this.target.type==level){
+                                    stage.removeChild(scoree,collectedd);
+                                    
+                                    //else
+                                        //{
+                                        //    stage.removeChild(this);
+                                        //}
+                                    if(this.target.alpha==0.7){
+                                        score+=250;
+                                    }
+                                    else{
+                                        score+=500;
+                                    }
+
+                                    collected++;
+                                    scoree = new createjs.Text(score , "18px Vogue Cyr","white" );
+                                    if(level<=5)
+                                      collectedd = new createjs.Text(collected+"/10", "18px Vogue Cyr","white" );
+                                    else if(level>5 && level<=8 )
+                                      collectedd = new createjs.Text(collected+"/20", "18px Vogue Cyr","white" );
+                                    else if(level>8 && level<=10 )
+                                      collectedd = new createjs.Text(collected+"/30", "18px Vogue Cyr","white" );
+                                    scoree.x=328;
+                                    scoree.y=18.5;
+                                    collectedd.x=565;
+                                    collectedd.y=18.5;
+                                    stage.addChild(scoree,collectedd);
+                                    if(level<=5){
+                                      if(collected>=10)
+                                        levelComplete();
+                                    }
+                                    else if(level>5 && level<=8){
+                                      if(collected>=20)
+                                        levelComplete();
+
+                                    }
+                                    else if(level>8 && level<=9){
+                                      if(collected>=30)
+                                        levelComplete();
+
+                                    }
+                                    else if(level==10){
+                                      if(collected>=30)
+                                        {gameC=true;
+                                        gameOver();
+                                      }
+
+                                    }
+                                
+
+                                
+                              }
+                                
+                             
+                            });
+                            var j =  Math.floor(Math.random() * (6 - 1 + 1)) + 1;
+                            //waste.zIndex=1000;
+                            if(j==1){
+                                waste.x=0;
+                                waste.y=300;
+                                TweenMax.to(waste,4,{ bezier: {values:[{x:250, y:100}, {x:500, y:500}],},rotation:270,onComplete:compl,ease:Linear.easeNone});
+                                
+                                sound_2.play();
+                            }
+                            else if(j==2){
+                                waste.x=650;
+                                waste.y=300;
+
+                                TweenMax.to(waste,4,{ bezier: {values:[{x:275, y:150}, {x:100, y:500}],},rotation:270,onComplete:compl,ease:Linear.easeNone});
+                                sound_2.play();
+                            }
+                            else if(j==3){
+                                waste.x=0;
+                                waste.y=300;
+                                TweenMax.to(waste,4,{ bezier: {values:[{x:300, y:180}, {x:600, y:500}],},rotation:270,onComplete:compl,ease:Linear.easeNone});
+                                sound_2.play();
+
+                            }else if(j==4){
+                                waste.x=650;
+                                waste.y=300;
+                                TweenMax.to(waste,4,{ bezier: {values:[{x:250, y:150}, {x:150, y:500}],},rotation:270,onComplete:compl,ease:Linear.easeNone});
+                                sound_2.play();
+
+                            }else if(j==5){
+                                waste.x=650;
+                                waste.y=300;
+                                TweenMax.to(waste,4,{ bezier: {values:[{x:500, y:150}, {x:300, y:500}],},rotation:270,onComplete:compl,ease:Linear.easeNone});
+                                sound_2.play();
+
+                            }else if(j==6){
+                                waste.x=0;
+                                waste.y=300;
+                                TweenMax.to(waste,4,{ bezier: {values:[{x:200, y:70}, {x:400, y:500}],},rotation:270,onComplete:compl,ease:Linear.easeNone});
+                                sound_2.play();
+
+                            }
+                            function compl(evt){
+                                //sound_3.play();
+                                this.target.alpha=0.2;
+                                if(this.target.type==1 || this.target.type==2)
+                                TweenMax.to(this.target,6.5,{x:canvas.width*1/scaleFactor,onComplete:comple,ease:Linear.easeNone});
+                                else if(this.target.type==4 || this.target.type==5)
+                                TweenMax.to(this.target,6.5,{y:700,onComplete:comple,ease:Linear.easeNone});
+                                else
+                                  TweenMax.to(this.target,6.5,{y:700,onComplete:comple,ease:Linear.easeNone});
+
+                               
+                               
+                                            
+                                            function comple(){
+
+                                                  if(level<=5){
+                                                    levelCompletee++;
+                                                 
+                                                        if(this.target.type==level)
+                                                        {
+                                                          
+                                                          stage.removeChild(scoree);
+                                                          score-=250;
+                                                          if(score<0)
+                                                            score=0;
+
+                                                          scoree = new createjs.Text(score , "18px Vogue Cyr","white" );
+                                                          
+                                                          scoree.x=328;
+                                                          scoree.y=18.5;
+                                                          stage.addChild(scoree);
+                                                        }
+                                                        console.log("Level Complete "+levelCompletee);
+                                                         if(levelCompletee>=10){
+
+                                                      gameOver();
+
+                                                  }
+                                                      }
+                                                      else if(level==6){
+                                                        levelCompletee++;
+                                                   
+                                                        if(this.target.type==1 || this.target.type==2){
+                                                            {
+                                                              
+                                                              stage.removeChild(scoree);
+                                                              score-=250;
+                                                              
+                                                              scoree = new createjs.Text(score , "18px Vogue Cyr","white" );
+                                                              
+                                                              scoree.x=328;
+                                                              scoree.y=18.5;
+                                                              stage.addChild(scoree);
+                                                            }
+                                                            console.log("Level Complete "+levelCompletee);
+                                                          }
+                                                               if(levelCompletee>=10){
+
+                                                      gameOver();
+
+                                                  }
+
+                                                      }
+                                                      else if(level==7){
+                                                         levelCompletee++;
+                                                    
+                                                        if(this.target.type==2 || this.target.type==5){
+                                                            {
+                                                             
+                                                              stage.removeChild(scoree);
+                                                              score-=250;
+                                                              
+                                                              scoree = new createjs.Text(score , "18px Vogue Cyr","white" );
+                                                              
+                                                              scoree.x=328;
+                                                              scoree.y=18.5;
+                                                              stage.addChild(scoree);
+                                                            }
+                                                            console.log("Level Complete "+levelCompletee);
+                                                          }
+                                                              if(levelCompletee>=10){
+
+                                                      gameOver();
+
+                                                  }
+
+                                                      }
+                                                      else if(level==8){
+                                                        levelCompletee++;
+                                                     
+                                                        if(this.target.type==1 || this.target.type==3){
+                                                            {
+                                                              
+                                                              stage.removeChild(scoree);
+                                                              score-=250;
+                                                              
+                                                              scoree = new createjs.Text(score , "18px Vogue Cyr","white" );
+                                                              
+                                                              scoree.x=328;
+                                                              scoree.y=18.5;
+                                                              stage.addChild(scoree);
+                                                            }
+                                                            console.log("Level Complete "+levelCompletee);
+                                                          }
+                                                             if(levelCompletee>=10){
+
+                                                      gameOver();
+
+                                                  }
+
+                                                      }
+                                                       else if(level==9){
+                                                         levelCompletee++;
+                                                    
+                                                        if(this.target.type==4 || this.target.type==3 || this.target.type==5){
+                                                            {
+                                                             
+                                                              stage.removeChild(scoree);
+                                                              score-=250;
+                                                              
+                                                              scoree = new createjs.Text(score , "18px Vogue Cyr","white" );
+                                                              
+                                                              scoree.x=328;
+                                                              scoree.y=18.5;
+                                                              stage.addChild(scoree);
+                                                            }
+                                                            console.log("Level Complete "+levelCompletee);
+                                                          }
+                                                              if(levelCompletee>=10){
+
+                                                      gameOver();
+
+                                                  }
+
+                                                      }
+                                                       else if(level==10){
+                                                        levelCompletee++;
+                                                    
+                                                        if(this.target.type==1 || this.target.type==2 || this.target.type==4){
+                                                            {
+                                                              
+                                                              stage.removeChild(scoree);
+                                                              score-=250;
+                                                              
+                                                              scoree = new createjs.Text(score , "18px Vogue Cyr","white" );
+                                                              
+                                                              scoree.x=328;
+                                                              scoree.y=18.5;
+                                                              stage.addChild(scoree);
+                                                            }
+                                                            console.log("Level Complete "+levelCompletee);
+                                                          }
+                                                              if(levelCompletee>=10){
+
+                                                      gameOver();
+
+                                                  }
+
+                                                      }
+                                                  
+                                            } 
+                                            
+
+                                
+                            }
+                            
+
+                           // if(paused==false)
+                            TweenMax.delayedCall(1.25, myFunction);
+                            function myFunction(){
+                            naam++;
+                            renderLevel();
+                            }
+
+                       // }
+
+
+                        }
+                        //
+                        function setSubmitAlpha(){
+                            submit.alpha = 1;
+                            submit_O.alpha = 0;
+                        }
+                        function setAlpha(){
+
+                            playButton.alpha = 1;
+                            playButton_O.alpha = 0;
+                        }
+                        function setHTPAlpha(){
+                            howToPlayButton.alpha = 1;
+                            howToPlayButton_O.alpha = 0;
+                        }
+                        function setSBAlpha(){
+                            scoreBoardButtons.alpha = 1;
+                            scoreBoardButtons_O.alpha = 0;
+                        }
+                        function setBBAlpha(){
+                            backButton.alpha = 1;
+                            backButton_O.alpha = 0;
+
+                        }
+                        function setHBAlpha(){
+                            helpButton.alpha = 1;
+                            helpButton_O.alpha = 0;
+
+                        }
+                        function setContinueBAlpha(){
+                            continueButton.alpha = 1;
+                            continueButton_O.alpha = 0;
+
+                        }
+                        function setRestartBAlpha(){
+                            restartButton.alpha = 1;
+                            restartButton_O.alpha = 0;
+
+                        }
+
+                         function setPBAlpha(){
+                            pauseButton.alpha = 1;
+                            pauseButton_O.alpha = 0;
+
+                        }
+                        function setIconAlpha(){
+                            nextIcon.alpha = 1;
+                            nextIcon_O.alpha =0;
+                        }
+                        function setMMAlpha(){
+                            mainMenuButton.alpha = 1;
+                            mainMenuButton_O.alpha =0;
+                            
+                        }
+                        function setStartBAlpha(){
+                            startButton.alpha = 1;
+                            startButton_O.alpha =0;
+                        }
+                        function setRetryAlpha(){
+                            retry.alpha = 1;
+                            retry_O.alpha = 0;
+
+                        }
+                        function onPlay(){
+                            //gameOver();
+                            //ShowhighScore();
+                            //onForest();
+                            //levelComplete();
+                            console.log(level);
+                            levell = new createjs.Text(level,"18px Vogue Cyr","white");
+                            levell.x=190;
+                            levell.y=18.5;
+
+
+                                scoree = new createjs.Text(score , "18px Vogue Cyr","white" );
+                                    if(level<=5)
+                                      collectedd = new createjs.Text(collected+"/10", "18px Vogue Cyr","white" );
+                                    else if(level>5 && level<=8 )
+                                      collectedd = new createjs.Text(collected+"/20", "18px Vogue Cyr","white" );
+                                    else if(level>8 && level<=10 )
+                                      collectedd = new createjs.Text(collected+"/30", "18px Vogue Cyr","white" );
+                                    scoree.x=328;
+                                    scoree.y=18.5;
+                                    collectedd.x=565;
+                                    collectedd.y=18.5;
+                            stage.addChild(round,pauseButtonContainer,helpButtonConatainer,levell,scoree,collectedd);
+
+                             if(level<=5)
+                            {
+                                bin=bini[level];
+                                sadbin=sadBini[level]
+                                shadow.x=250;
+                                shadow.y=400;
+                                bin.x=245;
+                                bin.y=280;
+
+                            
+
+                               
+                                stage.addChild(shadow,bin,sadbin);
+                                bin.alpha=1;
+                                sadbin.alpha=0;
+                                
+                            }
+                            else if(level==6){
+                              bin=bini[1];
+                              bin2=bini[2];
+                              bin2.x=400;
+                              bin2.y=280;
+                              shadow.x=105;
+                              shadow.y=400;
+                              bin.x=100;
+                              bin.y=280;
+                              shadow1= new createjs.Bitmap(queue.getResult("shadow"));
+                              shadow1.x=405;
+                              shadow1.y=400;
+                              stage.addChild(shadow,bin);
+                              bin.alpha=1;
+                              stage.addChild(shadow1,bin2);
+                            }
+                             
+                            else if(level==7){
+                              bin=bini[2];
+                              bin2=bini[5];
+                              bin2.x=400;
+                              bin2.y=280;
+                              shadow.x=105;
+                              shadow.y=400;
+                              bin.x=100;
+                              bin.y=280;
+                              shadow1= new createjs.Bitmap(queue.getResult("shadow"));
+                              shadow1.x=405;
+                              shadow1.y=400;
+                              stage.addChild(shadow,bin);
+                              bin.alpha=1;
+                              stage.addChild(shadow1,bin2);
+                            }
+                             
+                            else if(level==8){
+                              bin=bini[1];
+                              bin2=bini[3];
+                              bin2.x=400;
+                              bin2.y=280;
+                              shadow.x=105;
+                              shadow.y=400;
+                              bin.x=100;
+                              bin.y=280;
+                              shadow1= new createjs.Bitmap(queue.getResult("shadow"));
+                              shadow1.x=405;
+                              shadow1.y=400;
+                              stage.addChild(shadow,bin);
+                              bin.alpha=1;
+                              stage.addChild(shadow1,bin2);
+                            }
+                             else if(level==9){
+                              bin=bini[4];
+                              bin2=bini[3];
+                              bin3=bini[5];
+                              bin2.x=420;
+                              bin2.y=280;
+                              shadow3= new createjs.Bitmap(queue.getResult("shadow"));
+                              shadow3.x=250;
+                              shadow3.y=400;
+                              bin3.x=245;
+                              bin3.y=280;
+                              shadow.x=75;
+                              shadow.y=400;
+                              bin.x=70;
+                              bin.y=280;
+                              shadow1= new createjs.Bitmap(queue.getResult("shadow"));
+                              shadow1.x=425;
+                              shadow1.y=400;
+                              stage.addChild(shadow,bin);
+                              bin.alpha=1;
+                              bin2.alpha=1;
+                              bin3.alpha=1;
+                              stage.addChild(shadow1,bin2,shadow3,bin3);
+                            }
+                             else if(level==10){
+                              bin=bini[1];
+                              bin2=bini[4];
+                              bin3=bini[2];
+                              bin2.x=420;
+                              bin2.y=280;
+                              shadow3= new createjs.Bitmap(queue.getResult("shadow"));
+                              shadow3.x=250;
+                              shadow3.y=400;
+                              bin3.x=245;
+                              bin3.y=280;
+                              shadow.x=75;
+                              shadow.y=400;
+                              bin.x=70;
+                              bin.y=280;
+                              shadow1= new createjs.Bitmap(queue.getResult("shadow"));
+                              shadow1.x=425;
+                              shadow1.y=400;
+                              stage.addChild(shadow,bin);
+                              bin.alpha=1;
+                              bin2.alpha=1;
+                              bin3.alpha=1;
+                              stage.addChild(shadow1,bin2,shadow3,bin3);
+                            }
+                            
+
+                            renderLevel();
+                        
+                            
+                        
+                        }
+                        function onLevelMap(){
+                            stage.removeChild(dropDownContainer);
+                        }
+                        function onPlayRoll(){
+                            playButton.alpha=0;
+                            playButton_O.alpha=1;
+                            
+                        }
+                        function onPlayRollOut(){
+                            setAlpha();
+                            //console.log("hello rolled out");
+                        }
+                        function onLevelSelect(){
+                            stage.addChild(dropDownContainer);
+                            stage.addChild();
+                        }
+                     
+                        
+                        
+
+                       
+                        
+                        function onHTP(){
+                            stage.removeAllChildren();
+                            backButtonContainer.x=270;
+                            backButtonContainer.y=365;
+                            stage.addChild(htp_screen,backButtonContainer);
+                            
+                        }
+                        function onHTPRoll(){
+                            howToPlayButton.alpha=0;
+                            howToPlayButton_O.alpha=1;
+
+                        }
+                        function onHTPRollOut(){
+                            setHTPAlpha();
+
+                        }                
+                        function onBack(){
+                            viewMain();
+
+                        }
+
+                        function onBBRoll(){
+                            backButton.alpha=0;
+                            backButton_O.alpha=1;
+                        }
+                        function onBBRollOut(){
+                            setBBAlpha();
+                        }
+                        function onStart(){
+                            stage.removeAllChildren();
+                            
+                            //score=0;
+                              shadow.x=250;
+                              shadow.y=400;
+
+                                introText = new createjs.Text("","16pt Vogue Cyr","493104")
+                           
+                               if(level==1)
+                            {
+
+                                introText.text = "Let’s recycle PAPER wastes:\n\n";
+                                introText.text += "•   Brochures and envelopes\n";
+                                introText.text += "•   Newspapers and magazines\n";
+                                introText.text += "•   Boxes and paper bags";
+                                //bin = paperBin;
+                                //bin = bini[1];
+
+                            }
+                            if(level==2){
+                                stage.removeChild(bin);
+                                introText.text = "Let’s recycle PLASTIC wastes:\n\n";
+                                introText.text +="•   Empty bottles\n"
+                                introText.text +="•   Buckets\n"
+                                introText.text +="•   Plastic Bags";
+                                //bin = bini[2];
+
+                            }
+                            if(level==3){
+                                stage.removeChild(bin);
+                                introText.text = "Let’s recycle ORGANIC wastes:\n\n";
+                                introText.text +="•   Fruits and vegetable peel\n";
+                                introText.text +="•   Flowers, leaves and grass\n";
+                                introText.text +="•   Leftover food.";
+                                //bin = bini[3];
+
+                            }
+                            if(level==4){
+                                stage.removeChild(bin);
+                                introText.text ="Let’s recycle METAL wastes :\n\n";
+                                introText.text +="•   Aluminum beverage cans\n";
+                                introText.text +="•   Household utensils and tools\n";
+                                introText.text +="•   Aluminum foil";
+                                //bin = bini[4];
+
+                            }
+                            if(level==5){
+                                stage.removeChild(bin);
+                                introText.text ="Let’s recycle GLASS wastes :\n\n";
+                                introText.text +="•   Empty bottles\n";
+                                introText.text +="•   Containers\n";
+                                introText.text +="•   Shards of glass";
+                                //bin = bini[5];
+
+                            }
+                            if(level==6){
+                                stage.removeChild(bin);
+                                introText.x=150;
+                                introText.y=50;
+                                introText.text ="Let’s recycle PAPER and PLASTIC\n";
+                                introText.text +="wastes";
+                                bin = bini[1];
+                                bin=bini[1];
+
+                                bin2=bini[2];
+                                bin2.x=400;
+                                bin2.y=280;
+                                shadow.x=105;
+                                shadow.y=400;
+                                bin.x=100;
+                                bin.y=280;
+                                shadow1= new createjs.Bitmap(queue.getResult("shadow"));
+                                shadow1.x=405;
+                                shadow1.y=400;
+                                
+                                
+                                stage.addChild(intro,introText,playButtonContainer,shadow1,bin2,shadow,bin);
+                                bin.alpha=1;
+                                bin2.alpha=1;
+                            }
+                            if(level==7){
+                                stage.removeChild(bin);
+                                introText.x=150;
+                                introText.y=50;
+                                introText.text ="Let’s recycle PLASTIC and GLASS\n";
+                                introText.text +="wastes";
+                                bin = bini[2];
+                                bin=bini[2];
+
+                                bin2=bini[5];
+                                bin2.x=400;
+                                bin2.y=280;
+                                shadow.x=105;
+                                shadow.y=400;
+                                bin.x=100;
+                                bin.y=280;
+                                shadow1= new createjs.Bitmap(queue.getResult("shadow"));
+                                shadow1.x=405;
+                                shadow1.y=400;
+                                
+                                
+                                stage.addChild(intro,introText,playButtonContainer,shadow1,bin2,shadow,bin);
+                                bin.alpha=1;
+                                bin2.alpha=1;
+                            }if(level==8){
+                                stage.removeChild(bin);
+                                introText.x=150;
+                                introText.y=50;
+                                introText.text ="Let’s recycle PAPER and ORGANIC\n";
+                                introText.text +="wastes";
+                                bin = bini[1];
+                                bin=bini[1];
+
+                                bin2=bini[3];
+                                bin2.x=400;
+                                bin2.y=280;
+                                shadow.x=105;
+                                shadow.y=400;
+                                bin.x=100;
+                                bin.y=280;
+                                shadow1= new createjs.Bitmap(queue.getResult("shadow"));
+                                shadow1.x=405;
+                                shadow1.y=400;
+                                
+                                
+                                stage.addChild(intro,introText,playButtonContainer,shadow1,bin2,shadow,bin);
+                                bin.alpha=1;
+                                bin2.alpha=1;
+                            }
+                             else if(level==9){
+                                stage.removeChild(bin);
+                                introText.x=150;
+                                introText.y=50;
+                                introText.text ="Let’s recycle METAL, GLASS and\nORGANIC";
+                                introText.text +=" wastes";
+                                bin = bini[4];
+                                bin=bini[4];
+                                
+                                bin2=bini[3];
+                                bin2.x=420;
+                                bin2.y=280;
+                                bin3=bini[5];
+                                shadow3= new createjs.Bitmap(queue.getResult("shadow"));
+                                bin3.x=245;
+                                bin3.y=280;
+                                shadow3.x=250;
+                                shadow3.y=400;
+                                shadow.x=75;
+                                shadow.y=400;
+                                bin.x=70;
+                                bin.y=280;
+                                shadow1= new createjs.Bitmap(queue.getResult("shadow"));
+                                shadow1.x=425;
+                                shadow1.y=400;
+                                
+                                
+                                stage.addChild(intro,introText,playButtonContainer,shadow3,bin3,shadow1,bin2,shadow,bin);
+                                bin.alpha=1;
+                                bin2.alpha=1;
+                                bin3.alpha=1;
+                            }
+                            else if(level==10){
+                                stage.removeChild(bin);
+                                introText.x=150;
+                                introText.y=50;
+                                introText.text ="Let’s recycle PAPER, PLASTIC and\nMETAL";
+                                introText.text +=" wastes";
+                                bin = bini[1];
+                                bin=bini[1];
+                                
+                                bin2=bini[4];
+                                bin2.x=420;
+                                bin2.y=280;
+                                bin3=bini[2];
+                                shadow3= new createjs.Bitmap(queue.getResult("shadow"));
+                                bin3.x=245;
+                                bin3.y=280;
+                                shadow3.x=250;
+                                shadow3.y=400;
+                                shadow.x=75;
+                                shadow.y=400;
+                                bin.x=70;
+                                bin.y=280;
+                                shadow1= new createjs.Bitmap(queue.getResult("shadow"));
+                                shadow1.x=425;
+                                shadow1.y=400;
+                                
+                                
+                                stage.addChild(intro,introText,playButtonContainer,shadow3,bin3,shadow1,bin2,shadow,bin);
+                                bin.alpha=1;
+                                bin2.alpha=1;
+                                bin3.alpha=1; 
+                            }
+                            
+                            if(level<=5)
+                               {
+                                 bin = bini[level];
+                                 bin.x=245;
+                                 bin.y=280;
+                                 bin.alpha=1;
+                                 introText.x=150;
+                                 introText.y=50;
+                                 stage.addChild(intro,introText,playButtonContainer,shadow,bin);
+                               }
+
+                           
+                           // levelComplete();
+                            //gameOver();
+
+                        }
+                         function onStartBRoll(){
+                            startButton.alpha = 0;
+                            startButton_O.alpha = 1;
+
+                        }
+                         function onStartBRollOut(){
+                            setStartBAlpha();
+
+                        }
+                         function onPause(){
+                          paused=true;
+                           TweenMax.pauseAll();
+                           //TweenMax.killAll(false, false, true);
+
+                            mainMenu_container.x=327;
+                            mainMenu_container.y=304;
+                           
+                            stage.addChild(shade,gamePaused,mainMenu_container,restartButtonContainer,continueButtonContainer);
+                            //console.log("pause button");
+
+
+                        }
+                         function onPauseBRoll(){
+                            pauseButton.alpha = 0;
+                            pauseButton_O.alpha = 1;
+
+                        }
+                         function onPauseBRollOut(){
+                            setPBAlpha();
+
+                        }
+                        function onHelpp(){
+                            //stage.removeAllChildren();
+                            TweenMax.pauseAll();
+                            onStart();
+
+
+                        }
+                         function onHelpBRoll(){
+                            helpButton.alpha = 0;
+                            helpButton_O.alpha = 1;
+
+                        }
+                         function onHelpBRollOut(){
+                            setHBAlpha();
+
+                        }
+
+                        function onScore(){
+                            stage.removeAllChildren();
+
+                            if(document.getElementById("EnterQuestionDiv")!=undefined)
+                            document.getElementById("EnterQuestionDiv").style.visibility="hidden";
+                            
+                            backButtonContainer.x=270;
+                            backButtonContainer.y=415;
+                            ShowhighScore();
+                            stage.addChild(scoreBoard,backButtonContainer);
+
+
+                        }
+                        function onSBRoll(){
+                            scoreBoardButtons.alpha=0;
+                            scoreBoardButtons_O.alpha=1;
+
+                        }
+                        function onSBRollOut(){
+                            setSBAlpha();
+
+                        }
+                        //level complete
+                        function levelComplete(){
+                            //stage.removeAllChildren();
+                            uKnow = new createjs.Text("                    Did you know?", "18pt Vogue Cyr bold","493104" );
+                            tex = new createjs.Text("", "14pt Vogue Cyr","493104" );
+                            if(level==1)
+                                tex.text="Aluminum, which is commonly used to make\nbeverage cans, can be recycled over and over \nagain.";
+                            if(level==2)
+                               tex.text= "It takes between 17 and 24 trees to make one\ntonne of paper.";
+                            if(level==3)
+                                tex.text="More than 40% of the industrial wood harvested\nis used to make paper.";
+                            if(level==4)
+                                tex.text="More than 80% of the things we throw away can\nbe reused, recycled or made into fertilizers.";
+                            if(level==5)
+                                tex.text="Recycling one aluminum beverage could save\nenough power to run a TV for three hours.";
+                            if(level==6)
+                                tex.text="Paper is the most recycled material.";
+                            if(level==7)
+                                tex.text="Recycling one ton of paper saves more than\n26,000 litres of water. That’s enough water to fill\nup more than 10 regular-sized bathtubs.  ";
+                            if(level==8)
+                                tex.text="Plastic can take up to 500 years to decompose.";
+                            if(level==9)
+                                tex.text="Glass is 100% recyclable. That means that it can\nbe recycled over and over again.";
+                            if(level==10)
+                                tex.text="One recycled glass bottle could save enough\nenergy to power a computer for 25 minutes.";
+                            tex.x=110;
+                            tex.y=254;
+                            uKnow.x=120;
+                            uKnow.y=223;
+                            
+                            //console.log("number"+number);
+                        
+
+                            
+                            //score=0;
+                            //score
+
+                            tex1 = new createjs.Text("LEVEL COMPLETE !", "28pt Vogue Cyr","493104" );
+                            tex1.x=180;
+                            tex1.y=100;
+                            TweenMax.killAll();
+                            mainMenu_container.x=76;
+                            mainMenu_container.y=350;
+                            submitContainer.x=235;
+                            submitContainer.y=345;
+                            nextIconContainer.x=413;
+                            nextIconContainer.y=350;
+                            scoree = new createjs.Text(score , "46pt Vogue Cyr","493104" );
+                            scoree.x=320;
+                            scoree.y=143;
+                            stage.addChild(shade,levelCompletePopUp,mainMenu_container,submitContainer,nextIconContainer,scoree,tex1,tex,uKnow);
+                            openBestScore = true;
+                            previousScore =score;
+                            
+                            //ShowhighScore();
+                            
+                           
+                            
+                        }
+                        function gameOver(){
+                            TweenMax.killAll();
+                            tex1 = new createjs.Text("", "30pt Vogue Cyr","493104" );
+                           if(bestScore==true){
+                            tex1.text = "Best Score";
+                            bestScore=false;
+                            tex1.x=230;
+                            tex1.y=100;
+                           }
+                           else if(gameC==true){
+                            tex1.text = "The End";
+                            gameC=false;
+                            tex1.x=260;
+                            tex1.y=100;
+
+                           }
+                           else{
+                           tex1.text =  "GAME OVER !";
+                           tex1.x=230;
+                            tex1.y=100;
+                           }
+                             openBestScore=false;
+                            var cartDiv=document.createElement("div");
+                            document.body.appendChild(cartDiv);
+                            cartDiv.id = "EnterQuestionDiv";
+                            document.getElementById(cartDiv.id).innerHTML="<input type=\"text\" id=\"hello\" size=\"12\" maxlength="+20+" value=\"Enter your name here\" onblur=\"if(this.value == ''){ this.value = 'Enter your name here';}\" onfocus=\"if(this.value == 'Enter your name here'){ this.value = '';}\"></input>";
+                           
+                             
+                            var enterquestion = document.getElementById(cartDiv.id);
+                            enterquestionDom = new createjs.DOMElement(enterquestion);
+                            enterquestionDom.x =120*scaleFactor;
+                            enterquestionDom.y = 245*scaleFactor;
+                           
+                            stage.addChild(enterquestionDom);
+                            
+                        
+                      
+                    
+                           
+                            mainMenu_container.x=76;
+                            mainMenu_container.y=350;
+                            submitContainer.x=235;
+                            submitContainer.y=345;
+                            retryContainer.x=415;
+                            retryContainer.y=350;
+                            uKnow = new createjs.Text("", "18pt Vogue Cyr","493104" );
+                            tex = new createjs.Text("", "18pt Vogue Cyr","493104" );
+                            
+                            tex.text ="Oh no! There's too much waste in the lake!\n";
+                            tex.text += "\t\t                        Try again?";
+                            tex.x=100;
+                            tex.y=250;
+                            
+                            
+                            submit.cursor="pointer";
+                            scoree = new createjs.Text(score,"46pt Vogue Cyr","493104");
+                            scoree.x=320;
+                            scoree.y=143;
+                            stage.addChild(shade,levelCompletePopUp,mainMenu_container,submitContainer,retryContainer,scoree,tex1);
+                            gotosubmit=true;
+                            //sound_1.play();  
+
+                       
+                        }
+                        function onSubmitt(){
+                            //console.log("hello in m submitcontianer");
+                             if(openBestScore==true){
+                               openBestScore=false;
+                              bestScore=true;
+                              gameOver();
+                             
+                            }
+                            else{
+                              var user_score=score;
+                              var user_name=$('#hello').val();
+
+                             if(user_name)
+                              {
+                                  console.log("score:",user_score);
+                                  console.log("name:",user_name);
+                                  data = {'user_name':user_name,'user_score':user_score,'reg_flag':1};
+                                  $.ajax({
+                                      url: 'score.php',
+                                      type: 'get',
+                                      data : data,
+                                      dataType : 'text',
+                                      success: function(){
+                                          console.log("success1");
+                                          datas = {'board_flag':1};
+                                          $.ajax({
+                                              url: 'score.php',
+                                              type: 'get',
+                                              data : datas,
+                                              // dataType : 'text',
+                                              dataType : 'json',
+                                              success: function(data){
+                                                  min_data = {"chk_flag":1};
+                                                  $.ajax({
+                                                      url: 'score.php',
+                                                      type: 'get',
+                                                      data : min_data,
+                                                      dataType : 'text',
+                                                      success: function(msg){
+                                                          localStorage.setItem('min_value', msg);
+                                                      }
+                                                  });
+
+                                                  
+                                              }
+                                          });
+                                          //back_layer.remove();
+                                          //createHighScoreScene();
+
+                                          $('#hello').val('');
+                                      }
+                                  });
+                                onScore();
+                                level=1;
+                                levelCompletee=0;
+                                collected=0;
+                                score=0;
+                              }
+                             else{
+                              console.log("Enter the name correctly!");
+                          }
+                        }
+    
+                        }
+                        
+                      
+                        function onBest(){
+                            //stage.removeChild(tex,tex1,submit);
+                            console.log("im submit button");
+                            tex1.text="BEST SCORE !";
+                            tex.text="";
+                            uKnow = new createjs.Text("", "18pt Vogue Cyr","493104" );
+                            var cartDiv=document.createElement("div");
+                            document.body.appendChild(cartDiv);
+                            cartDiv.id = "EnterQuestionDiv";
+                            document.getElementById(cartDiv.id).innerHTML="<input type=\"text\" id=\"hello\" size=\"12\" maxlength="+20+" value=\"Enter your name heree\" onblur=\"if(this.value == ''){ this.value = 'Enter your name here';}\" onfocus=\"if(this.value == 'Enter your name here'){ this.value = '';}\"></input>";
+                           
+                             
+                            var enterquestion = document.getElementById(cartDiv.id);
+                            enterquestionDom = new createjs.DOMElement(enterquestion);
+                            enterquestionDom.x =360;
+                            enterquestionDom.y = 235;
+                           
+                            stage.addChild(enterquestionDom);
+                            
+                        }
+                        function onSubmittRoll(){
+                            submit.alpha=1;
+                            submit_O.alpha=1
+                        }
+                        function onSubmittRollOut(){
+                            setSubmitAlpha();
+                        }
+
+
+                       
+                        function onNext(){
+                            stage.removeAllChildren();
+                            //number++;
+                           
+                            //if(level==6)
+                                //gamecomplete();
+                            level++;
+                            collected=0;
+
+                            levelCompletee=0;
+                            onStart();
+                           
+                        }
+                        function onNRoll(){
+                            nextIcon.alpha = 1;
+                            nextIcon_O.alpha = 1;
+
+                        }
+                        function onNRollOut(){
+                            setIconAlpha();
+
+                        }
+                        ///
+                        function onRetry(){
+                            stage.removeAllChildren();
+                            document.getElementById("EnterQuestionDiv").style.visibility="hidden";
+                            collected=0;
+                            score=previousScore;
+                            TweenMax.killAll();
+                            levelCompletee=0;
+                            //if(level>1)
+                            //level--;
+                            paused=false;
+                            onPlay();
+                            
+                        }
+                        function onRetryRoll(){
+                            retry.alpha = 1;
+                            retry_O.alpha = 1;
+                        }
+                        function onRetryRollOut(){
+                            setRetryAlpha();
+                        }
+
+
+                        function onMain(){
+                            if(document.getElementById("EnterQuestionDiv")!=undefined)
+                            document.getElementById("EnterQuestionDiv").style.visibility="hidden";
+                            //onPlay();
+                            //console.log("main buttom");
+                            collected=0;
+                            levelCompletee=0;
+                            score=0;
+                            viewMain();
+                        }
+                        function onMRoll(){
+                            mainMenuButton.alpha = 1;
+                            mainMenuButton_O.alpha = 1;
+                        }
+                        function onMRollOut(){
+                            setMMAlpha();
+
+                        }
+                        //
+                        function onContine(){
+                            //document.getElementById("hello").style.visibility="hidden";
+                            //onPlay();
+
+                            stage.removeChild(shade,gamePaused,mainMenu_container,restartButtonContainer,continueButtonContainer);
+                            paused=false;
+                            TweenMax.resumeAll();
+                            console.log("contine buttom");
+                        }
+                        function onContinueBRoll(){
+                            continueButton.alpha = 0;
+                            continueButton_O.alpha = 1;
+                        }
+                        function onContinueBRollOut(){
+                            setContinueBAlpha()
+
+                        }
+
+                        //
+                        //
+                        function onRestart(){
+                            //document.getElementById("hello").style.visibility="hidden";
+                            paused=false;
+                            if(level==1){
+                              score=0;
+                            }
+                            else
+                            score=previousScore;
+                            collected=0;
+                            levelCompletee=0;
+                            TweenMax.killAll();
+                            onPlay();
+                            //console.log("restartButton buttom");
+                        }
+                        function onRestartBRoll(){
+                            restartButton.alpha = 0;
+                            restartButton_O.alpha = 1;
+                        }
+                        function onRestartBRollOut(){
+                            setRestartBAlpha();
+
+                        }
+                        //
+
+                        //display highScore
+                        function ShowhighScore(){
+                          datas = {'board_flag':1};
+                          $.ajax({
+                        url: 'score.php',
+                        type: 'get',
+                        data : datas,
+                        //  dataType : 'text',
+                        dataType : 'json',
+                        success: function(data){
+
+                            for(i=0;i<data.length;i++) {
+                                var tmpName=data[i].name;
+                                if(tmpName.length>12)
+                                {
+                                    tmpName=data[i].name.substr(0,12);
+                                    tmpName+="...";
+                                }
+                                console.log("tmpName"+tmpName+""+data[i].score);
+                                for(var j=0,yy=210;j<data.length;yy+=22,j++){
+                                namee[j] = new createjs.Text(j+1+"."+data[j].name.substr(0,12),"18px Vogue Cyr","493104");
+                                dataa[j] = new createjs.Text(data[j].score,"18px Vogue Cyr","493104");
+                                namee[j].x = 200;
+                                namee[j].y = yy;
+                                dataa[j].x = 400;
+                                dataa[j].y = yy;
+                                stage.addChild(namee[j],dataa[j]);
+                                }
+                                
+
+                                //var dataa = new createjs.Text(data[i],"");
+                                /*
+                                $('.lead ul').append(
+                                    "<li><div style='position:relative'>" +
+                                        "<span class='c1'>"+(i+1)+"</span>" +
+                                        "<span class='c2'>"+tmpName+"</span>" +
+                                        "<span class='c3'>"+data[i].score+"</span>"+
+                                        "</div>"+
+                                        "</li>"
+                                );
+                                */
+                            }
+
+                //            var str="<div class='high_score_col1' ><table>";
+                //            for(i=0;i<data.length;i++) {
+                //                str+="<tr>" +
+                //                                "<td width='30px' style='color: green;text-align: left'>"+(i+1)+"</td>" +
+                //                                "<td width='160px'>"+data[i].name+"</td>" +
+                //                                "<td width='50px'>"+data[i].score+"</td>" +
+                //                         "</tr>";
+                //
+                //            }
+                //           str+="</table></div>";
+                //           //lbl_score.dom.innerHTML=str;
+                //            $('.lbl_score').html(str);
+
+                              
+                        }
+                    });
+                    }
+
+
+
+
+
+
+                        function stagePressHandler(e){
+
+
+
+                            console.log(parseInt(e.stageX-canvas.width)+" ::: "+parseInt(e.stageY-canvas.height));
+                        }
+                        /////////////////////////ticker/////////////////////////////////////
+  
+                        function tick(){
+                        ////////////console.log('In fucntion tick');
+                         //checking collision between 
+
+                          
+                        stage.update();
+                            }   
+
+
+        </script>
+
+</html>
